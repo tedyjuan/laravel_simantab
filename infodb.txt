@@ -1,0 +1,90 @@
+Daftar prefix modul untuk ERP sekolah
+acd	Akademik (kelas, kurikulum, nilai)
+std	Kesiswaan (data siswa, kedisiplinan)
+adm	Admisi/PPDB (pendaftaran siswa baru)
+att	Presensi/Absensi
+fin	Keuangan (SPP, tagihan, pembayaran)
+hr	Kepegawaian (guru, staff, payroll)
+lib	Perpustakaan
+inv	Sarana & Prasarana / Inventory aset sekolah
+sys	Sistem (user, role, permission, log)
+
+Tipe tabel (sub-prefix)
+ms	Master	data acuan yang jarang berubah
+trx	Transaksi	header transaksi
+dtl	Detail	child dari trx (line item)
+ref	Referensi/lookup	dropdown, konstanta
+log	Log/history	audit trail
+rpt	View/report	untuk reporting layer
+
+
+Tipe tabel (sub-prefix)
+Kode	Arti	Contoh isi
+ms	Master	data acuan yang jarang berubah
+trx	Transaksi	header transaksi
+dtl	Detail	child dari trx (line item)
+ref	Referensi/lookup	dropdown, konstanta
+log	Log/history	audit trail
+rpt	View/report	untuk reporting layer
+
+Contoh implementasi
+
+Modul Akademik (acd)
+
+acd_ms_kelas
+acd_ms_mapel
+acd_ms_kurikulum
+acd_ms_tahun_ajaran
+acd_trx_jadwal_pelajaran
+acd_trx_nilai
+acd_dtl_nilai_komponen
+
+Modul Kesiswaan (std)
+
+std_ms_siswa
+std_ms_wali_murid
+std_trx_mutasi_siswa
+std_trx_pelanggaran
+
+Modul Keuangan (fin)
+
+fin_ms_jenis_tagihan
+fin_ms_tarif_spp
+fin_trx_tagihan
+fin_trx_pembayaran
+fin_dtl_pembayaran
+
+Modul Kepegawaian (hr)
+
+hr_ms_pegawai
+hr_ms_jabatan
+hr_trx_payroll
+hr_dtl_payroll_komponen
+hr_trx_cuti
+
+Modul Presensi (att)
+
+att_ms_jenis_absen
+att_trx_presensi_siswa
+att_trx_presensi_pegawai
+
+Modul Perpustakaan (lib)
+
+lib_ms_buku
+lib_ms_kategori_buku
+lib_trx_peminjaman
+lib_dtl_peminjaman
+
+Modul Sarpras (inv)
+
+inv_ms_aset
+inv_ms_kategori_aset
+inv_trx_mutasi_aset
+inv_trx_maintenance
+
+Modul Sistem (sys)
+
+sys_ms_user
+sys_ms_role
+sys_ms_permission
+sys_log_activity

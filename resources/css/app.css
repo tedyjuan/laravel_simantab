@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+@plugin 'flyonui';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer components {
+
+    /* Sidebar Collapsed State */
+    .sidebar-collapsed {
+        width: 5rem !important;
+    }
+
+    .sidebar-collapsed .sidebar-text {
+        display: none;
+    }
+
+    .sidebar-collapsed .logo-container {
+        padding-left: 0;
+        padding-right: 0;
+        justify-content: center;
+    }
+
+    .sidebar-collapsed #profileCard {
+        padding-left: .5rem;
+        padding-right: .5rem;
+    }
+
+    .sidebar-collapsed #profileCard .avatar-ring {
+        margin: 0 auto;
+    }
+
+}

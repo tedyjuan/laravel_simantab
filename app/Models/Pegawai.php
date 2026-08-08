@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Pegawai extends Model
+{
+    use SoftDeletes;
+
+
+    protected $table = 'hr_ms_pegawai';
+
+
+    protected $fillable = [
+        'nip',
+        'nama',
+        'jenis_kelamin',
+        'email',
+        'no_hp',
+        'alamat',
+        'tanggal_lahir',
+        'jenis_pegawai',
+        'jabatan',
+        'tanggal_masuk',
+        'status'
+    ];
+
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'tanggal_masuk' => 'date'
+    ];
+}
