@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Andi Saputra',
+            'name' => 'Teddy Juanda',
             'username' => 'siswa01',
             'email' => 'siswa01@sekolah.test',
             'password' => 'password',
@@ -38,5 +38,11 @@ class DatabaseSeeder extends Seeder
             'password' => 'password',
             'role' => 'walimurid',
         ]);
+        // ========================= // SEED PEGAWAI // =========================
+        $this->call([KurikulumSeeder::class,]);
+        $this->call([TahunAjarSeeder::class,]);
+        $this->call([MapelSeeder::class,]);
+        $this->call([PegawaiSeeder::class,]);
+        $this->call([JenjangSeeder::class,]);
     }
 }

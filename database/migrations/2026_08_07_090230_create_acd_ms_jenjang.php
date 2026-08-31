@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('acd_ms_kurikulum', function (Blueprint $table) {
+        Schema::create('acd_ms_jenjang', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_kurikulum', 100);
-            $table->string('nama_kurikulum', 100); // contoh: Kurikulum Merdeka
-            $table->text('deskripsi')->nullable();
+            $table->string('kode_jenjang', 10)->unique();
+            $table->string('nama_jenjang', 100);
+            $table->unsignedTinyInteger('urutan')->default(1);
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('acd_ms_kurikulum');
+        Schema::dropIfExists('acd_ms_jenjang');
     }
 };

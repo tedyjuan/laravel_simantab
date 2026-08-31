@@ -17,78 +17,134 @@
                     {{ request()->routeIs('dashboard')
                         ? 'bg-indigo-50 text-indigo-700 font-medium'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600' }}">
-            <svg class="w-5 h-5 shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
+            <span
+                class="icon-[solar--home-2-outline] w-5 h-5 shrink-0 group-hover:text-indigo-600 text-gray-400 transition-colors"></span>
             <span class="sidebar-text">Dashboard</span>
         </a>
-        <a href="{{ route('pegawai.index') }}"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group
-                    {{ request()->routeIs('pegawai.index')
-                        ? 'bg-indigo-50 text-indigo-700 font-medium'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600' }}">
-            <svg class="w-5 h-5 shrink-0 group-hover:text-indigo-600 text-gray-400 transition-colors" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3v-6m-3 6v-9m-3 9V9" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3V3z" />
-            </svg>
-            <span class="sidebar-text">Master Pegawai</span>
-        </a>
-        <a href="#"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors group">
-            <svg class="w-5 h-5 shrink-0 group-hover:text-indigo-600 text-gray-400 transition-colors" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4.13a4 4 0 11-8 0 4 4 0 018 0zm6 4a4 4 0 10-8 0" />
-            </svg>
-            <span class="sidebar-text">Karyawan / Driver</span>
-        </a>
-        {{-- Laporan with Submenu --}}
+        {{-- Master with Submenu --}}
+        @php
+            $masterOpen = request()->routeIs(
+                'kelas.*',
+                'pegawai.*',
+                'tahunajar.*',
+                'kurikulum.*',
+                'mapel.*',
+                'jenjang.*',
+            );
+        @endphp
+
         <div>
             <button
-                onclick="document.getElementById('submenu-laporan').classList.toggle('hidden'); this.querySelector('.chevron').classList.toggle('rotate-180')"
+                onclick="
+            document.getElementById('submenu-master').classList.toggle('hidden');
+            this.querySelector('.chevron').classList.toggle('rotate-180')
+        "
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors group focus:outline-none">
+
                 <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5 shrink-0 group-hover:text-indigo-600 text-gray-400 transition-colors"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-                    </svg>
-                    <span class="sidebar-text">Laporan</span>
+                    <span
+                        class="icon-[solar--database-outline] w-5 h-5 shrink-0
+                {{ $masterOpen ? 'text-indigo-600' : 'text-gray-400' }}
+                group-hover:text-indigo-600 transition-colors">
+                    </span>
+
+                    <span class="sidebar-text
+                {{ $masterOpen ? 'text-indigo-600' : '' }}">
+                        Master
+                    </span>
                 </div>
-                <svg class="chevron w-4 h-4 text-gray-400 sidebar-text transition-transform duration-200" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
+
+                <svg class="chevron w-4 h-4 text-gray-400 sidebar-text transition-transform duration-200
+            {{ $masterOpen ? 'rotate-180' : '' }}"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            <div id="submenu-laporan" class="hidden pl-4 pr-2 py-1 space-y-1 sidebar-text">
-                <a href="#"
-                    class="group flex items-center gap-2 px-3 py-2 text-sm text-gray-500 rounded-lg hover:text-indigo-600 hover:bg-gray-50 transition-colors">
+
+            <div id="submenu-master" class="{{ $masterOpen ? '' : 'hidden' }} pl-4 pr-2 py-1 space-y-1 sidebar-text">
+
+                {{-- Master Kelas --}}
+                <a href="{{ route('kelas.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('kelas.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
                     <span
-                        class="w-1.5 h-1.5 rounded-full bg-gray-400 group-hover:bg-indigo-600 transition-colors shrink-0"></span>
-                    Laporan Harian
+                        class="icon-[streamline--class-lesson] w-5 h-5 shrink-0 {{ request()->routeIs('kelas.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }} transition-colors">
+                    </span>
+                    Master Kelas
                 </a>
-                <a href="#"
-                    class="group flex items-center gap-2 px-3 py-2 text-sm text-gray-500 rounded-lg hover:text-indigo-600 hover:bg-gray-50 transition-colors">
+
+                {{-- Master Pegawai --}}
+                <a href="{{ route('pegawai.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('pegawai.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+
                     <span
-                        class="w-1.5 h-1.5 rounded-full bg-gray-400 group-hover:bg-indigo-600 transition-colors shrink-0"></span>
-                    Laporan Bulanan
+                        class="icon-[solar--users-group-rounded-outline] w-5 h-5 shrink-0
+                {{ request()->routeIs('pegawai.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                transition-colors">
+                    </span>
+
+                    Master Pegawai
                 </a>
+                {{-- Master Tahun Ajar --}}
+                <a href="{{ route('tahunajar.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('tahunajar.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+
+                    <span
+                        class="icon-[fluent-mdl2:calendar-year] w-5 h-5 shrink-0  
+                        {{ request()->routeIs('tahunajar.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+
+                    Master Tahun Ajar
+                </a>
+                {{-- Master kurikulum --}}
+                <a href="{{ route('kurikulum.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('kurikulum.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class="icon-[ic--outline-book] w-5 h-5 shrink-0
+                        {{ request()->routeIs('kurikulum.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master kurikulum
+                </a>
+                {{-- Master Mapel --}}
+                <a href="{{ route('mapel.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('mapel.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class=" icon-[solar--book-outline] w-5 h-5 shrink-0
+                        {{ request()->routeIs('mapel.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master Mapel
+                </a>
+                {{-- Master Jenjang --}}
+                <a href="{{ route('jenjang.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('jenjang.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class="icon-[ion--school-outline] w-5 h-5 shrink-0
+                        {{ request()->routeIs('jenjang.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master Jenjang
+                </a>
+
             </div>
         </div>
-        <p class="sidebar-text px-3 pt-5 pb-1 text-xs uppercase tracking-wider text-gray-400 font-semibold">
-            Lainnya</p>
-        <a href="#"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-indigo-600 transition-colors group">
-            <svg class="w-5 h-5 shrink-0 group-hover:text-indigo-600 text-gray-400 transition-colors" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span class="sidebar-text">Pengaturan</span>
-        </a>
+
+
+
+
     </nav>
 </aside>

@@ -88,3 +88,24 @@ sys_ms_user
 sys_ms_role
 sys_ms_permission
 sys_log_activity
+
+
+
+
+                 acd_ms_tahun_ajaran
+                         │
+                         ▼
+                    acd_ms_rombel
+                   /      |       \
+                  /       |        \
+                 ▼        ▼         ▼
+       acd_ms_kelas  acd_ms_ruangan  hr_ms_pegawai
+                               
+                 wali_kelas ────────┘
+                       
+                         │
+                         ▼
+                acd_tr_siswa_rombel
+                         │
+                         ▼
+                    acd_ms_siswa

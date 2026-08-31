@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pegawai extends Model
 {
-    use SoftDeletes;
-
+    use HasFactory, SoftDeletes;
 
     protected $table = 'hr_ms_pegawai';
-
 
     protected $fillable = [
         'nip',
@@ -26,7 +25,6 @@ class Pegawai extends Model
         'tanggal_masuk',
         'status'
     ];
-
 
     protected $casts = [
         'tanggal_lahir' => 'date',

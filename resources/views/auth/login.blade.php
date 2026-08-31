@@ -140,7 +140,7 @@
                     <p class="text-sm text-gray-400 mt-1.5">Masuk ke akun admin untuk melanjutkan.</p>
                 </div>
 
-                <form id="loginForm" class="space-y-7" method="POST" action="{{ route('login') }}"
+                <form id="loginForm" class="space-y-7" method="POST" action="{{ route('login.process') }}"
                     onsubmit="return handleLogin(event)">
                     @csrf
 
@@ -154,7 +154,7 @@
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                             <input id="username" name="username" type="text" autocomplete="username" required
-                                placeholder="Masukkan username" class="field-input">
+                                placeholder="Masukkan username" class="field-input focus" tabindex="1">
                         </div>
                         <p id="usernameError" class="hidden text-sm text-red-500"></p>
                     </div>
@@ -174,7 +174,7 @@
                                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                             <input id="password" name="password" type="password" autocomplete="current-password"
-                                required placeholder="Masukkan password" class="field-input pr-8">
+                                tabindex="2" required placeholder="Masukkan password" class="field-input pr-8">
                             <button type="button" onclick="togglePassword()" aria-label="Tampilkan password"
                                 class="absolute right-0.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600 transition-colors">
                                 <svg id="eyeIcon" class="w-4.5 h-4.5" width="18" height="18"
@@ -185,7 +185,7 @@
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </button>
-                            <p id="passwordError" class="hidden text-sm text-red-500">asas</p>
+                            <p id="passwordError" class="hidden text-sm text-red-500"></p>
                         </div>
                     </div>
 

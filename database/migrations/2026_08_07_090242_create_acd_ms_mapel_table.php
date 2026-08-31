@@ -14,11 +14,9 @@ return new class extends Migration
             $table->string('nama_mapel', 100);
             $table->unsignedTinyInteger('kkm')->default(75); // kriteria ketuntasan minimal
 
-            $table->foreignId('id_kurikulum')
-                ->constrained('acd_ms_kurikulum')
-                ->restrictOnDelete();
-
-            $table->enum('kelompok', ['wajib', 'peminatan', 'muatan_lokal'])->default('wajib');
+            $table->string('kode_kurikulum')->constrained('acd_ms_kurikulum')->restrictOnDelete();
+            $table->string('kode_jenjang')->constrained('acd_ms_jenjang')->restrictOnDelete();
+            $table->enum('kelompok', ['wajib', 'peminatan', 'muatan_lokal', 'kebutuhan_khusus', 'keterampilan'])->default('wajib');
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });

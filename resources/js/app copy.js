@@ -109,6 +109,3 @@ document.addEventListener('livewire:init', () => {
 });
 
 
-// =========================
-// SIDEBAR MENU ACCORDION
-// =========================
