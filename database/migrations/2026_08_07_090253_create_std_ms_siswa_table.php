@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('std_ms_siswa', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
             $table->string('nis', 30)->unique();
             $table->string('nisn', 20)->unique()->nullable();
             $table->string('nama', 100);

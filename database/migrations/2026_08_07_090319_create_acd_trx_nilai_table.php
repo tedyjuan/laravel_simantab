@@ -10,36 +10,53 @@ return new class extends Migration
     {
         Schema::create('acd_trx_nilai', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
+            // Siswa
+            $table->string('kode_siswa', 30);
 
-            $table->foreignId('id_siswa')
-                ->constrained('std_ms_siswa')
-                ->cascadeOnDelete();
+            // Mata Pelajaran
+            $table->string('kode_mapel', 20);
 
-            $table->foreignId('id_mapel')
-                ->constrained('acd_ms_mapel')
-                ->restrictOnDelete();
+            // Kelas / Rombel
+            $table->string('kode_kelas', 20);
 
-            $table->foreignId('id_kelas')
-                ->constrained('acd_ms_kelas')
-                ->restrictOnDelete();
+            // Tahun Ajaran
+            $table->string('kode_tahun_ajaran', 20);
 
-            $table->foreignId('id_tahun_ajaran')
-                ->constrained('acd_ms_tahun_ajaran')
-                ->restrictOnDelete();
+            // Guru
+            $table->string('kode_guru', 30)->nullable();
 
-            $table->foreignId('id_guru')
-                ->nullable()
-                ->constrained('hr_ms_pegawai')
-                ->nullOnDelete();
+            // Nilai
+            $table->decimal('nilai_akhir', 5, 2)->nullable();
 
-            $table->decimal('nilai_akhir', 5, 2)->nullable(); // hasil akhir dari komponen
-            $table->string('predikat', 5)->nullable(); // A, B, C, dst (opsional, bisa dihitung)
+            // Predikat: A, B, C, D
+            $table->string('predikat', 5)->nullable();
+
+            // Catatan guru
             $table->text('catatan')->nullable();
 
             $table->timestamps();
 
-            // 1 siswa hanya punya 1 record nilai per mapel per tahun ajaran
-            $table->unique(['id_siswa', 'id_mapel', 'id_tahun_ajaran'], 'uniq_nilai_siswa_mapel_ta');
+            // 1 siswa hanya punya 1 nilai
+            // untuk 1 mapel pada 1 tahun ajaran
+            $table->unique([
+                'kode_siswa',
+                'kode_mapel',
+                'kode_tahun_ajaran'
+            ], 'uniq_nilai_siswa_mapel_ta');
+
+            // Index
+            $table->index([
+                'kode_kelas',
+                'kode_tahun_ajaran'
+            ]);
+
+            $table->index([
+                'kode_guru',
+                'kode_tahun_ajaran'
+            ]);
+
+            $table->index('kode_mapel');
         });
     }
 
@@ -47,4 +64,11 @@ return new class extends Migration
     {
         Schema::dropIfExists('acd_trx_nilai');
     }
+
+    // | kode_siswa | kode_mapel | kode_kelas | kode_tahun_ajaran | kode_guru | nilai_akhir | predikat |
+    // | ---------- | ---------- | ---------- | ----------------- | --------- | ----------: | -------- |
+    // | STD001     | MTK        | SMP1-A     | 2026/2027         | PGW001    |       88.50 | A        |
+    // | STD002     | MTK        | SMP1-A     | 2026/2027         | PGW001    |       75.00 | B        |
+    // | STD003     | IPA        | SMP1-A     | 2026/2027         | PGW002    |       92.00 | A        |
+
 };

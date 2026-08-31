@@ -8,30 +8,53 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('hr_ms_pegawai', function (Blueprint $table) {
+        Schema::create('hr_ms_jabatan', function (Blueprint $table) {
             $table->id();
-            $table->string('nip', 30)->unique()->nullable(); // Nomor Induk Pegawai
-            $table->string('nama', 100);
-            $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->string('email', 100)->unique()->nullable();
-            $table->string('no_hp', 20)->nullable();
-            $table->text('alamat')->nullable();
-            $table->date('tanggal_lahir')->nullable();
+            $table->ulid('ulid')->unique();
+            // Business key
+            $table->string('kode_jabatan', 20)->unique();
 
-            $table->enum('jenis_pegawai', ['guru', 'staff', 'kepala_sekolah'])->default('guru');
-            $table->string('jabatan', 50)->nullable();
-            $table->date('tanggal_masuk')->nullable();
+            // Nama jabatan
+            $table->string('nama_jabatan', 100);
 
-            $table->enum('status', ['aktif', 'nonaktif', 'cuti'])->default('aktif');
+            // Optional: kelompok jabatan
+            $table->enum('jenis_jabatan', [
+                'struktural',
+                'fungsional',
+                'pelaksana'
+            ])->default('pelaksana');
+
+            // Urutan tampilan
+            $table->unsignedSmallInteger('urutan')->default(1);
+
+            $table->enum('status', [
+                'aktif',
+                'nonaktif'
+            ])->default('aktif');
+
             $table->timestamps();
-            $table->softDeletes();
 
-            $table->index(['jenis_pegawai', 'status']);
+            $table->index([
+                'jenis_jabatan',
+                'status'
+            ]);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('hr_ms_pegawai');
+        Schema::dropIfExists('hr_ms_jabatan');
     }
+
+
+    // | kode_jabatan | nama_jabatan         | jenis      |
+    // | ------------ | -------------------- | ---------- |
+    // | KEPSEK       | Kepala Sekolah       | struktural |
+    // | WAKASEK      | Wakil Kepala Sekolah | struktural |
+    // | GURU         | Guru                 | fungsional |
+    // | TU           | Tata Usaha           | pelaksana  |
+    // | ADMIN        | Administrator        | pelaksana  |
+    // | BENDAHARA    | Bendahara            | pelaksana  |
+    // | PUSTAKAWAN   | Pustakawan           | pelaksana  |
+
 };

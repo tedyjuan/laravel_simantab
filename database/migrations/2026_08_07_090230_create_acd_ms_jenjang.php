@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('acd_ms_jenjang', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
             $table->string('kode_jenjang', 10)->unique();
             $table->string('nama_jenjang', 100);
             $table->unsignedTinyInteger('urutan')->default(1);

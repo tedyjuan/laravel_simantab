@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('acd_ms_mapel', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
             $table->string('kode_mapel', 20)->unique();
             $table->string('nama_mapel', 100);
             $table->unsignedTinyInteger('kkm')->default(75); // kriteria ketuntasan minimal

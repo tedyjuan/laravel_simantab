@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('acd_ms_rombel', function (Blueprint $table) {
             $table->id();
-
+            $table->ulid('ulid')->unique();
             // Identitas rombel
             $table->string('kode_rombel', 50)->unique();
             $table->string('nama_rombel', 100);

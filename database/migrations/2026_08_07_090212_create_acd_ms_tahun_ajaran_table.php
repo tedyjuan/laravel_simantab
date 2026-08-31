@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('acd_ms_tahun_ajaran', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
             $table->string('kode', 20)->unique(); // contoh: 2025/2026
             $table->string('nama', 50); // contoh: Tahun Ajaran 2025/2026
             $table->date('tanggal_mulai');

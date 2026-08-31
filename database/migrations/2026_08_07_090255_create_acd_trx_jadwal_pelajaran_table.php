@@ -10,32 +10,53 @@ return new class extends Migration
     {
         Schema::create('acd_trx_jadwal_pelajaran', function (Blueprint $table) {
             $table->id();
+            $table->ulid('ulid')->unique();
+            // Kelas
+            $table->string('kode_kelas', 20);
 
-            $table->foreignId('id_kelas')
-                ->constrained('acd_ms_kelas')
-                ->cascadeOnDelete();
+            // Mata Pelajaran
+            $table->string('kode_mapel', 20);
 
-            $table->foreignId('id_mapel')
-                ->constrained('acd_ms_mapel')
-                ->restrictOnDelete();
+            // Guru / Pegawai
+            $table->string('kode_pegawai', 30);
 
-            $table->foreignId('id_guru')
-                ->constrained('hr_ms_pegawai')
-                ->restrictOnDelete();
+            // Tahun Ajaran
+            $table->string('kode_tahun_ajaran', 20);
 
-            $table->foreignId('id_tahun_ajaran')
-                ->constrained('acd_ms_tahun_ajaran')
-                ->cascadeOnDelete();
+            // Jadwal
+            $table->enum('hari', [
+                'senin',
+                'selasa',
+                'rabu',
+                'kamis',
+                'jumat',
+                'sabtu'
+            ]);
 
-            $table->enum('hari', ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu']);
             $table->time('jam_mulai');
             $table->time('jam_selesai');
+
             $table->string('ruangan', 50)->nullable();
 
             $table->timestamps();
 
-            $table->index(['id_kelas', 'hari']);
-            $table->index(['id_guru', 'hari']);
+            // Index
+            $table->index([
+                'kode_kelas',
+                'hari'
+            ]);
+
+            $table->index([
+                'kode_pegawai',
+                'hari'
+            ]);
+
+            $table->index([
+                'kode_mapel',
+                'hari'
+            ]);
+
+            $table->index('kode_tahun_ajaran');
         });
     }
 

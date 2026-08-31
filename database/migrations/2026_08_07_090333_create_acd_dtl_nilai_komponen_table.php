@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('acd_dtl_nilai_komponen', function (Blueprint $table) {
             $table->id();
-
+            $table->ulid('ulid')->unique();
             $table->foreignId('id_nilai')
                 ->constrained('acd_trx_nilai')
                 ->cascadeOnDelete();

@@ -10,23 +10,39 @@ return new class extends Migration
     {
         Schema::create('hr_ms_pegawai', function (Blueprint $table) {
             $table->id();
-            $table->string('nip', 30)->unique()->nullable(); // Nomor Induk Pegawai
+            $table->ulid('ulid')->unique();
+            // Business key pegawai
+            $table->string('kode_pegawai', 30)->unique();
+
+            // NIP bersifat opsional
+            $table->string('nip', 30)->nullable()->unique();
+
+            // Identitas
             $table->string('nama', 100);
             $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->string('email', 100)->unique()->nullable();
+
+            $table->string('email', 100)->nullable()->unique();
             $table->string('no_hp', 20)->nullable();
             $table->text('alamat')->nullable();
             $table->date('tanggal_lahir')->nullable();
 
-            $table->enum('jenis_pegawai', ['guru', 'staff', 'kepala_sekolah'])->default('guru');
-            $table->string('jabatan', 50)->nullable();
+            // Relasi ke master jabatan menggunakan kode
+            $table->string('kode_jabatan', 20)->nullable();
+
             $table->date('tanggal_masuk')->nullable();
 
-            $table->enum('status', ['aktif', 'nonaktif', 'cuti'])->default('aktif');
+            // Status pegawai
+            $table->enum('status', [
+                'aktif',
+                'nonaktif',
+                'cuti'
+            ])->default('aktif');
+
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['jenis_pegawai', 'status']);
+            $table->index('kode_pegawai');
+            $table->index('kode_jabatan');
         });
     }
 
