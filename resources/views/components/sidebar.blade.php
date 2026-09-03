@@ -30,6 +30,9 @@
                 'kurikulum.*',
                 'mapel.*',
                 'jenjang.*',
+                'jabatan.*',
+                'gedung.*',
+                'ruangan.*',
             );
         @endphp
 
@@ -138,6 +141,41 @@
                         transition-colors">
                     </span>
                     Master Jenjang
+                </a>
+                {{-- Master Jabatan --}}
+                <a href="{{ route('jabatan.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('jabatan.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class="icon-[mdi--account-tie] w-5 h-5 shrink-0
+                        {{ request()->routeIs('jabatan.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master Jabatan
+                </a>
+                {{-- Master Gedung --}}
+                <a href="{{ route('gedung.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('gedung.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class="icon-[carbon--building] w-5 h-5 shrink-0
+                        {{ request()->routeIs('gedung.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master Gedung
+                </a>
+                <a href="{{ route('ruangan.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('ruangan.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class="icon-[cil--room] w-5 h-5 shrink-0
+                        {{ request()->routeIs('ruangan.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master Ruangan
                 </a>
 
             </div>

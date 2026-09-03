@@ -16,10 +16,11 @@ return new class extends Migration
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->enum('semester', ['ganjil', 'genap']);
-            $table->boolean('is_aktif')->default(false);
+            $table->enum('status', [
+                'aktif',
+                'nonaktif'
+            ])->default('nonaktif');
             $table->timestamps();
-
-            $table->index(['is_aktif']);
         });
     }
 

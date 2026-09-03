@@ -1,0 +1,45 @@
+📚 Akademik
+   ├── Tahun Ajaran
+   ├── Kurikulum
+   ├── Jenjang
+   ├── Kelas
+   ├── Rombel
+   ├── Mata Pelajaran
+   └── Jadwal Pelajaran
+
+👨‍🎓 Kesiswaan
+   ├── Data Siswa
+   ├── Orang Tua / Wali
+   ├── Kedisiplinan
+   └── Mutasi Siswa
+
+👨‍💼 Kepegawaian
+   ├── Pegawai
+   ├── Jabatan
+   ├── Golongan
+   └── Penggajian
+
+🏢 Sarana & Prasarana
+   ├── Gedung
+   ├── Ruangan
+   ├── Aset
+   ├── Kategori Aset
+   └── Inventaris
+
+💰 Keuangan
+   ├── Jenis Tagihan
+   ├── Komponen SPP
+   ├── Rekening
+   └── Metode Pembayaran
+
+📚 Perpustakaan
+   ├── Kategori Buku
+   ├── Rak
+   ├── Penerbit
+   └── Buku
+
+⚙️ Sistem
+   ├── User
+   ├── Role
+   ├── Permission
+   └── Log Aktivitas

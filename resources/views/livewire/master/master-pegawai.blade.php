@@ -42,6 +42,7 @@
             @click="
                     modalOpen = true;
                     $wire.set('pegawai_id', null, false);
+                    $wire.set('kode_pegawai', null, false);
                     $wire.set('nip', '', false);
                     $wire.set('nama', '', false);
                     $wire.set('jenis_kelamin', '', false);
@@ -49,8 +50,7 @@
                     $wire.set('no_hp', '', false);
                     $wire.set('alamat', '', false);
                     $wire.set('tanggal_lahir', '', false);
-                    $wire.set('jenis_pegawai', 'guru', false);
-                    $wire.set('jabatan', '', false);
+                    $wire.set('kode_jabatan', '', false);
                     $wire.set('tanggal_masuk', '', false);
                     $wire.set('status', 'aktif', false);
                 "
@@ -73,7 +73,6 @@
                         <th>NIP</th>
                         <th>Jenis Kelamin</th>
                         <th>Email</th>
-                        <th>Jenis Pegawai</th>
                         <th>Jabatan</th>
                         <th>Status</th>
                         <th class="pr-6 text-right">Aksi</th>
@@ -99,7 +98,7 @@
                                             {{ $pegawai->nama }}
                                         </p>
                                         <p class="text-xs text-[#9A97B8]">
-                                            {{ $pegawai->jabatan ?? '-' }}
+                                            {{ $pegawai->kode_jabatan ?? '-' }}
                                         </p>
                                     </div>
                                 </div>
@@ -116,13 +115,10 @@
                             <td class="text-sm text-[#544F7A]">
                                 {{ $pegawai->email ?? '-' }}
                             </td>
-                            {{-- JENIS PEGAWAI --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ ucwords(str_replace('_', ' ', $pegawai->jenis_pegawai ?? '-')) }}
-                            </td>
+
                             {{-- JABATAN --}}
                             <td class="text-sm text-[#544F7A]">
-                                {{ $pegawai->jabatan ?? '-' }}
+                                {{ $pegawai->kode_jabatan ?? '-' }}
                             </td>
                             {{-- STATUS --}}
                             <td>
@@ -288,44 +284,82 @@
                             </span>
                         @enderror
                     </div>
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">
-                            Jenis Pegawai
-                        </label>
-                        <select wire:model="jenis_pegawai"
-                            class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
-                            <option value="guru">
-                                Guru
-                            </option>
-                            <option value="staff">
-                                Staff
-                            </option>
-                            <option value="kepala_sekolah">
-                                Kepala Sekolah
-                            </option>
-                        </select>
-                        @error('jenis_pegawai')
-                            <span class="mt-1 block text-xs text-red-500">
-                                {{ $message }}
-                            </span>
-                        @enderror
-                    </div>
+
                 </div>
                 {{-- JABATAN + STATUS --}}
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
+                    <div class="relative" x-data="{
+                        open: false,
+                        search: '',
+                    
+                        jabatans: @js(
+    $jabatans
+        ->map(
+            fn($j) => [
+                'kode' => $j->kode_jabatan,
+                'nama' => $j->nama_jabatan,
+            ],
+        )
+        ->values(),
+),
+                    
+                        selectedLabel: @js(optional($jabatans->firstWhere('kode_jabatan', $kode_jabatan))->nama_jabatan),
+                    
+                        get filtered() {
+                            if (this.search === '') {
+                                return this.jabatans;
+                            }
+                    
+                            return this.jabatans.filter(j =>
+                                j.nama.toLowerCase().includes(
+                                    this.search.toLowerCase()
+                                )
+                            );
+                        },
+                    
+                        select(j) {
+                            $wire.set('kode_jabatan', j.kode);
+                    
+                            this.selectedLabel = j.nama;
+                            this.search = '';
+                            this.open = false;
+                        }
+                    }" @click.outside="open = false">
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">
                             Jabatan
                         </label>
-                        <input type="text" wire:model="jabatan"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm"
-                            placeholder="cth. Guru Matematika" />
-                        @error('jabatan')
+
+                        {{-- Input trigger --}}
+                        <div class="relative">
+                            <input type="text" x-model="search" @focus="open = true; search = ''"
+                                :placeholder="selectedLabel || '-- Pilih Jabatan --'"
+                                class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" readonly />
+
+                            <span
+                                class="icon-[tabler--chevron-down] absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#9A97B8]"></span>
+                        </div>
+
+                        {{-- Dropdown --}}
+                        <div x-show="open" x-cloak
+                            class="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-[#ECE9F7] bg-white shadow-lg">
+                            <template x-for="j in filtered" :key="j.kode">
+                                <div @click="select(j)"
+                                    class="cursor-pointer px-3 py-2 text-sm text-[#21203D] hover:bg-[#F3F1FA]"
+                                    x-text="j.nama"></div>
+                            </template>
+
+                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-[#9A97B8]">
+                                Tidak ditemukan
+                            </div>
+                        </div>
+
+                        @error('kode_jabatan')
                             <span class="mt-1 block text-xs text-red-500">
                                 {{ $message }}
                             </span>
                         @enderror
                     </div>
+                    {{--  STATUS --}}
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">
                             Status

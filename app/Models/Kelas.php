@@ -4,42 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Kelas extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'acd_ms_kelas';
 
     protected $fillable = [
+        'ulid',
         'kode_kelas',
         'nama_kelas',
+        'kode_jenjang',
         'tingkat',
-        'jurusan',
-        'rombel',
-        'id_tahun_ajaran',
-        'id_wali_kelas',
-        'kapasitas',
-        'ruangan',
-        'status',
+        'status'
     ];
 
-    protected $casts = [
-        'tingkat'   => 'integer',
-        'kapasitas' => 'integer',
-    ];
-
-    // Relasi ke Tahun Ajaran (wajib ada, restrictOnDelete)
-    public function tahunAjaran(): BelongsTo
+    public function jenjang()
     {
-        return $this->belongsTo(TahunAjar::class, 'id_tahun_ajaran');
-    }
-
-    // Relasi ke Wali Kelas / Pegawai (opsional, nullOnDelete)
-    public function waliKelas(): BelongsTo
-    {
-        return $this->belongsTo(Pegawai::class, 'id_wali_kelas');
+        return $this->belongsTo(Jenjang::class, 'kode_jenjang', 'kode_jenjang');
     }
 }

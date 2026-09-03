@@ -5,6 +5,7 @@ namespace App\Livewire\master;
 use App\Models\TahunAjar;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 class MasterTahunAjar extends Component
 {
@@ -20,7 +21,7 @@ class MasterTahunAjar extends Component
     public ?string $tanggal_mulai = null;
     public ?string $tanggal_selesai = null;
     public ?string $semester = null;
-    public $is_aktif = false;
+    public ?string $status = null;
 
     // Untuk proses delete (di-set dari Alpine pakai $wire.set(..., false) saat klik icon hapus)
     public ?int $deleteId = null;
@@ -50,18 +51,16 @@ class MasterTahunAjar extends Component
      * WAJIB ke server karena harus ambil data dari database.
      * Modal ditampilkan lewat event 'open-modal' yang ditangkap Alpine.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $data = TahunAjar::findOrFail($id);
-
         $this->tahun_ajaran_id = $data->id;
         $this->kode            = $data->kode;
         $this->nama            = $data->nama;
         $this->tanggal_mulai   = $data->tanggal_mulai;
         $this->tanggal_selesai = $data->tanggal_selesai;
         $this->semester        = $data->semester;
-        $this->is_aktif        = $data->is_aktif;
-
+        $this->status          = $data->status;
         $this->resetValidation();
         $this->dispatch('open-modal');
     }
@@ -78,22 +77,37 @@ class MasterTahunAjar extends Component
             'nama'            => 'required|string|max:100',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'semester'        => 'required|in:Ganjil,Genap',
-            'is_aktif'        => 'required|boolean',
+            'semester'        => 'required|in:ganjil,genap',
+            'status'          => 'required|in:aktif,nonaktif',
         ]);
 
-        TahunAjar::updateOrCreate(
-            ['id' => $this->tahun_ajaran_id],
-            $validated
-        );
+        if ($this->tahun_ajaran_id) {
 
-        $message = $this->tahun_ajaran_id
-            ? 'Tahun ajaran berhasil diperbarui.'
-            : 'Tahun ajaran berhasil ditambahkan.';
+            // UPDATE
+            TahunAjar::findOrFail($this->tahun_ajaran_id)
+                ->update($validated);
+
+            $message = 'Tahun ajaran berhasil diperbarui.';
+        } else {
+
+            // CREATE
+            TahunAjar::create([
+                ...$validated,
+                'ulid' => (string) Str::ulid(),
+            ]);
+
+            $message = 'Tahun ajaran berhasil ditambahkan.';
+        }
 
         $this->resetInputFields();
+
         $this->dispatch('close-modal');
-        $this->dispatch('tampil-toast', pesan: $message, icon: 'success');
+
+        $this->dispatch(
+            'tampil-toast',
+            pesan: $message,
+            icon: 'success'
+        );
     }
 
     /**
@@ -117,7 +131,7 @@ class MasterTahunAjar extends Component
         $this->tanggal_mulai = '';
         $this->tanggal_selesai = '';
         $this->semester = '';
-        $this->is_aktif = false;
+        $this->status = '';
         $this->resetValidation();
     }
 }

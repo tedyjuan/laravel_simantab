@@ -39,10 +39,10 @@
                 $wire.set('tahun_ajaran_id', null, false);
                 $wire.set('kode', '', false);
                 $wire.set('nama', '', false);
-                $wire.set('tanggal_mulai', '', false);
+                $wire.set('tanggal_mulai', '', false); 
                 $wire.set('tanggal_selesai', '', false);
                 $wire.set('semester', '', false);
-                $wire.set('is_aktif', false, false);
+                $wire.set('status', null, false);
             "
             class="btn shrink-0 border-none bg-[#7C6AEF] text-white shadow-[0_10px_20px_-8px_rgba(124,106,239,0.55)] hover:bg-[#6552E0]">
             <span class="icon-[tabler--plus] size-4"></span>
@@ -97,10 +97,11 @@
                             {{-- STATUS --}}
                             <td>
                                 @php
-                                    $statusClass = $thn_ajar->is_aktif
-                                        ? 'bg-[#E7F8EE] text-[#1E9E5A]'
-                                        : 'bg-[#F3F1FA] text-[#6B6890]';
-                                    $statusLabel = $thn_ajar->is_aktif ? 'Aktif' : 'Nonaktif';
+                                    $statusClass =
+                                        $thn_ajar->status === 'aktif'
+                                            ? 'bg-[#E7F8EE] text-[#1E9E5A]'
+                                            : 'bg-[#F3F1FA] text-[#6B6890]';
+                                    $statusLabel = $thn_ajar->status === 'aktif' ? 'Aktif' : 'Nonaktif';
                                 @endphp
                                 <span class="badge badge-sm gap-1.5 border-none font-medium {{ $statusClass }}">
                                     <span class="size-1.5 rounded-full bg-current"></span>
@@ -219,11 +220,12 @@
                 {{-- SEMESTER + STATUS --}}
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Semester</label>
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Semester
+                        </label>
                         <select wire:model="semester" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
                             <option value="">Pilih semester</option>
-                            <option value="Ganjil">Ganjil</option>
-                            <option value="Genap">Genap</option>
+                            <option value="ganjil">Ganjil</option>
+                            <option value="genap">Genap</option>
                         </select>
                         @error('semester')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
@@ -231,11 +233,12 @@
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
-                        <select wire:model="is_aktif" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
-                            <option value="1">Aktif</option>
-                            <option value="0">Nonaktif</option>
+                        <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
+                            <option value="">Pilih status</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Nonaktif</option>
                         </select>
-                        @error('is_aktif')
+                        @error('status')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>

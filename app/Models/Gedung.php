@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jenjang extends Model
+class Gedung extends Model
 {
     use HasFactory;
 
-    protected $table = 'acd_ms_jenjang';
+    protected $table = 'inv_ms_gedung';
 
     protected $fillable = [
         'ulid',
-        'kode_jenjang',
-        'nama_jenjang',
-        'urutan',
-        'status'
+        'kode_gedung',
+        'nama_gedung',
+        'alamat',
+        'jumlah_lantai',
+        'deskripsi',
+        'status',
     ];
 }

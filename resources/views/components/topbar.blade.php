@@ -10,7 +10,7 @@
             </button>
             {{-- ...search input tetap sama... --}}
             <div class="relative hidden sm:block shrink-0">
-                <input type="text" placeholder="Cari transaksi..." class="input input-bordered input-sm w-64 pl-9">
+                <input type="text" placeholder="Cari menu..." class="input input-bordered input-sm w-64 pl-9">
                 <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"

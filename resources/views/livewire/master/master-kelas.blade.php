@@ -46,15 +46,9 @@
             @click="
                 modalOpen = true;
                 $wire.set('kelas_id', null, false);
-                $wire.set('kode_kelas', '', false);
                 $wire.set('nama_kelas', '', false);
+                $wire.set('kode_jenjang', '', false);
                 $wire.set('tingkat', null, false);
-                $wire.set('jurusan', '', false);
-                $wire.set('rombel', '', false);
-                $wire.set('id_tahun_ajaran', null, false);
-                $wire.set('id_wali_kelas', null, false);
-                $wire.set('kapasitas', 30, false);
-                $wire.set('ruangan', '', false);
                 $wire.set('status', 'aktif', false);
             "
             class="btn shrink-0 border-none bg-[#7C6AEF] text-white shadow-[0_10px_20px_-8px_rgba(124,106,239,0.55)] hover:bg-[#6552E0]">
@@ -74,12 +68,8 @@
                     <tr class="border-b border-[#ECE9F7] bg-[#FBFAFE] text-xs uppercase tracking-wide text-[#9A97B8]">
                         <th class="py-3.5 pl-6">Kode Kelas</th>
                         <th>Nama Kelas</th>
+                        <th>Kode Tingkatan</th>
                         <th>Tingkat</th>
-                        <th>Jurusan</th>
-                        <th>Rombel</th>
-                        <th>Wali Kelas</th>
-                        <th>Tahun Ajaran</th>
-                        <th>Kapasitas</th>
                         <th>Status</th>
                         <th class="pr-6 text-right">Aksi</th>
                     </tr>
@@ -102,27 +92,11 @@
                             </td>
                             {{-- TINGKAT --}}
                             <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->tingkat ?? '-' }}
+                                {{ $kelas->kode_jenjang ?? '-' }}
                             </td>
                             {{-- JURUSAN --}}
                             <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->jurusan ?? '-' }}
-                            </td>
-                            {{-- ROMBEL --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->rombel ?? '-' }}
-                            </td>
-                            {{-- WALI KELAS --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->waliKelas->nama ?? '-' }}
-                            </td>
-                            {{-- TAHUN AJARAN --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->tahunAjaran->kode ?? '-' }}
-                            </td>
-                            {{-- KAPASITAS --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->kapasitas ?? '-' }}
+                                {{ $kelas->tingkat ?? '-' }}
                             </td>
                             {{-- STATUS --}}
                             <td>
@@ -208,15 +182,8 @@
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
                 {{-- KODE KELAS + NAMA KELAS --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Kode Kelas</label>
-                        <input type="text" wire:model="kode_kelas"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. X-IPA-1" />
-                        @error('kode_kelas')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Kelas</label>
                         <input type="text" wire:model="nama_kelas"
@@ -226,81 +193,14 @@
                         @enderror
                     </div>
                 </div>
-                {{-- TINGKAT + JURUSAN --}}
+                {{-- TINGKAT + Status --}}
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tingkat</label>
                         <input type="number" wire:model="tingkat" min="1" max="255"
                             class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. 10" />
                         @error('tingkat')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Jurusan</label>
-                        <input type="text" wire:model="jurusan"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. IPA" />
-                        @error('jurusan')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                {{-- ROMBEL + KAPASITAS --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Rombel</label>
-                        <input type="text" wire:model="rombel" maxlength="5"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. A" />
-                        @error('rombel')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Kapasitas</label>
-                        <input type="number" wire:model="kapasitas" min="1"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. 36" />
-                        @error('kapasitas')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                {{-- WALI KELAS + TAHUN AJARAN --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Wali Kelas</label>
-                        <select wire:model="id_wali_kelas"
-                            class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
-                            <option value="">Pilih wali kelas</option>
-                            @foreach ($pegawais as $pegawai)
-                                <option value="{{ $pegawai->id }}">{{ $pegawai->nama }}</option>
-                            @endforeach
-                        </select>
-                        @error('id_wali_kelas')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tahun Ajaran</label>
-                        <select wire:model="id_tahun_ajaran"
-                            class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
-                            <option value="">Pilih tahun ajaran</option>
-                            @foreach ($tahunAjarans as $ta)
-                                <option value="{{ $ta->id }}">{{ $ta->kode }} - {{ $ta->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_tahun_ajaran')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                {{-- RUANGAN + STATUS --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Ruangan</label>
-                        <input type="text" wire:model="ruangan"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. R.101" />
-                        @error('ruangan')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -314,6 +214,25 @@
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
+                </div>
+
+                {{--  jenjang --}}
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Jenjang</label>
+                        <select wire:model="kode_jenjang" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
+                            <option value="">-- Pilih Jenjang --</option>
+                            @foreach ($jenjangs as $jenjang)
+                                <option value="{{ $jenjang->kode_jenjang }}">
+                                    {{ $jenjang->kode_jenjang }} - {{ $jenjang->nama_jenjang }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('kode_jenjang')
+                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                 </div>
                 {{-- BUTTON --}}
                 <div class="mt-6 flex items-center justify-end gap-2">

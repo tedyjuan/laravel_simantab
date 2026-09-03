@@ -12,6 +12,7 @@ class Mapel extends Model
     protected $table = 'acd_ms_mapel';
 
     protected $fillable = [
+        'ulid',
         'kode_mapel',
         'nama_mapel',
         'kkm',

@@ -2,11 +2,11 @@
 
 namespace App\Livewire\master;
 
+use App\Models\Jenjang;
 use App\Models\Kelas;
-use App\Models\Pegawai;
-use App\Models\TahunAjar;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 class MasterKelas extends Component
 {
@@ -19,13 +19,8 @@ class MasterKelas extends Component
     public ?int $kelas_id = null;
     public ?string $kode_kelas = null;
     public ?string $nama_kelas = null;
-    public ?int $tingkat = null;
-    public ?string $jurusan = null;
-    public ?string $rombel = null;
-    public ?int $id_tahun_ajaran = null;
-    public ?int $id_wali_kelas = null;
-    public ?int $kapasitas = 30;
-    public ?string $ruangan = null;
+    public ?string $kode_jenjang = null;
+    public ?string $tingkat = null;
     public ?string $status = null;
 
     // Untuk proses delete (di-set dari Alpine pakai $wire.set(..., false) saat klik icon hapus)
@@ -38,20 +33,25 @@ class MasterKelas extends Component
 
     public function render()
     {
-        $kelass = Kelas::with(['tahunAjaran', 'waliKelas'])
-            ->where(function ($query) {
-                $query->where('kode_kelas', 'like', '%' . $this->search . '%')
-                    ->orWhere('nama_kelas', 'like', '%' . $this->search . '%')
-                    ->orWhere('jurusan', 'like', '%' . $this->search . '%');
+
+        $kelass = Kelas::with([
+            'jenjang',
+        ])
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('kode_kelas', 'like', '%' . $this->search . '%')
+                        ->orWhere('nama_kelas', 'like', '%' . $this->search . '%')
+                        ->orWhere('kode_jenjang', 'like', '%' . $this->search . '%')
+                        ->orWhere('tingkat', 'like', '%' . $this->search . '%')
+                        ->orWhere('status', 'like', '%' . $this->search . '%');
+                });
             })
-            ->orderBy('tingkat', 'asc')
-            ->orderBy('kode_kelas', 'asc')
+            ->orderByDesc('created_at')
             ->paginate(10);
 
         return view('livewire.master.master-kelas', [
-            'kelass'       => $kelass,
-            'pegawais'     => Pegawai::orderBy('nama')->get(),
-            'tahunAjarans' => TahunAjar::orderBy('kode', 'desc')->get(),
+            'kelass'      => $kelass,
+            'jenjangs'    => Jenjang::orderBy('kode_jenjang', 'asc')->get(),
         ]);
     }
 
@@ -62,19 +62,13 @@ class MasterKelas extends Component
      */
     public function edit(int $id)
     {
-        $kelas = Kelas::findOrFail($id);
-
-        $this->kelas_id        = $kelas->id;
-        $this->kode_kelas      = $kelas->kode_kelas;
-        $this->nama_kelas      = $kelas->nama_kelas;
-        $this->tingkat         = $kelas->tingkat;
-        $this->jurusan         = $kelas->jurusan;
-        $this->rombel          = $kelas->rombel;
-        $this->id_tahun_ajaran = $kelas->id_tahun_ajaran;
-        $this->id_wali_kelas   = $kelas->id_wali_kelas;
-        $this->kapasitas       = $kelas->kapasitas;
-        $this->ruangan         = $kelas->ruangan;
-        $this->status          = $kelas->status;
+        $kelas              = Kelas::findOrFail($id);
+        $this->kelas_id     = $kelas->id;
+        $this->kode_kelas   = $kelas->kode_kelas;
+        $this->nama_kelas   = $kelas->nama_kelas;
+        $this->kode_jenjang = $kelas->kode_jenjang;
+        $this->tingkat      = $kelas->tingkat;
+        $this->status       = $kelas->status;
 
         $this->resetValidation();
         $this->dispatch('open-modal');
@@ -88,31 +82,43 @@ class MasterKelas extends Component
     public function store()
     {
         $validated = $this->validate([
-            'kode_kelas'      => 'required|string|max:20|unique:acd_ms_kelas,kode_kelas,' . $this->kelas_id,
-            'nama_kelas'      => 'required|string|max:50',
-            'tingkat'         => 'required|integer|min:1|max:255',
-            'jurusan'         => 'nullable|string|max:50',
-            'rombel'          => 'nullable|string|max:5',
-            'id_tahun_ajaran' => 'required|exists:acd_ms_tahun_ajaran,id',
-            'id_wali_kelas'   => 'nullable|exists:hr_ms_pegawai,id',
-            'kapasitas'       => 'required|integer|min:1|max:65535',
-            'ruangan'         => 'nullable|string|max:50',
-            'status'          => 'required|in:aktif,nonaktif',
+            'kode_jenjang' => 'required|string|max:50',
+            'nama_kelas'   => 'required|string|max:50',
+            'tingkat'      => 'nullable|string|max:50',
+            'status'       => 'required|in:aktif,nonaktif',
         ]);
+        // Generate kode kelas
+        $kodeKelas = 'KLS-' . strtoupper($this->kode_jenjang) . '-' . $this->tingkat;
+        // Cek apakah kode sudah digunakan oleh kelas lain
+        $kodeSudahAda = Kelas::where('kode_kelas', $kodeKelas)
+            ->when($this->kelas_id, function ($query) {
+                $query->where('id', '!=', $this->kelas_id);
+            })
+            ->exists();
 
-        Kelas::updateOrCreate(
-            ['id' => $this->kelas_id],
-            $validated
-        );
+        if ($kodeSudahAda) {
+            $this->addError('kode_jenjang', "Kombinasi jenjang dan tingkat tersebut sudah digunakan ({$kodeKelas}).");
+            return;
+        }
 
-        $message = $this->kelas_id
-            ? 'Kelas berhasil diperbarui.'
-            : 'Kelas berhasil ditambahkan.';
+        $validated['kode_kelas'] = $kodeKelas;
 
+        if ($this->kelas_id) {
+            // UPDATE
+            Kelas::findOrFail($this->kelas_id)->update($validated);
+            $message = 'Kelas berhasil diperbarui.';
+        } else {
+            // CREATE
+            Kelas::create([
+                ...$validated,
+                'ulid' => (string) Str::ulid(),
+            ]);
+
+            $message = 'Kelas berhasil ditambahkan.';
+        }
         $this->resetInputFields();
         $this->dispatch('close-modal');
-
-        session()->flash('message', $message);
+        $this->dispatch('tampil-toast', pesan: $message, icon: 'success');
     }
 
     /**
@@ -125,8 +131,8 @@ class MasterKelas extends Component
 
         $this->deleteId = null;
         $this->dispatch('close-delete-modal');
-
-        session()->flash('message', 'Kelas berhasil dihapus.');
+        $message = 'Kelas berhasil dihapus.';
+        $this->dispatch('tampil-toast', pesan: $message, icon: 'success');
     }
 
     private function resetInputFields()
@@ -134,14 +140,9 @@ class MasterKelas extends Component
         $this->kelas_id = null;
         $this->kode_kelas = '';
         $this->nama_kelas = '';
-        $this->tingkat = null;
-        $this->jurusan = '';
-        $this->rombel = '';
-        $this->id_tahun_ajaran = null;
-        $this->id_wali_kelas = null;
-        $this->kapasitas = 30;
-        $this->ruangan = '';
-        $this->status = 'aktif';
+        $this->kode_jenjang = null;
+        $this->tingkat = '';
+        $this->status = '';
         $this->resetValidation();
     }
 }

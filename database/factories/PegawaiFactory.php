@@ -4,24 +4,31 @@ namespace Database\Factories;
 
 use App\Models\Pegawai;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+use App\Models\Jabatan;
 
 class PegawaiFactory extends Factory
 {
     protected $model = Pegawai::class;
     public function definition(): array
     {
+        $faker = fake('id_ID');
+        $jabatan = Jabatan::where('status', 'aktif')
+            ->inRandomOrder()
+            ->first();
         return [
-            'nip'           => fake()->unique()->numerify('##########'),
-            'nama'          => fake()->name(),
-            'jenis_kelamin' => fake()->randomElement(['L', 'P']),
-            'email'         => fake()->unique()->safeEmail(),
-            'no_hp'         => fake()->phoneNumber(),
-            'alamat'        => fake()->address(),
-            'tanggal_lahir' => fake()->dateTimeBetween('-60 years', '-22 years')->format('Y-m-d'),
-            'jenis_pegawai' => fake()->randomElement(['guru', 'staff', 'kepala_sekolah',]),
-            'jabatan'       => fake()->randomElement(['Guru', 'Wali Kelas', 'Kepala Sekolah', 'Wakil Kepala Sekolah', 'Staff Tata Usaha', 'Bendahara', 'Operator', 'Administrasi',]),
-            'tanggal_masuk' => fake()->dateTimeBetween('-15 years', 'now')->format('Y-m-d'),
-            'status'        => fake()->randomElement(['aktif', 'nonaktif', 'cuti',]),
+            'ulid'          => (string) Str::ulid(),
+            'kode_pegawai'  => 'PGW-' . fake()->unique()->numerify('#####'),
+            'nip'           => fake()->unique()->numerify('#################'),
+            'nama'          => $faker->name(),
+            'jenis_kelamin' => $faker->randomElement(['L', 'P',]),
+            'email'         => $faker->unique()->safeEmail(),
+            'no_hp'         => $faker->phoneNumber(),
+            'alamat'        => $faker->address(),
+            'tanggal_lahir' => $faker->dateTimeBetween('-60 years', '-23 years')->format('Y-m-d'),
+            'kode_jabatan'  => $jabatan?->kode_jabatan,
+            'tanggal_masuk' => $faker->dateTimeBetween('-15 years', 'now')->format('Y-m-d'),
+            'status'        => 'aktif',
         ];
     }
 }

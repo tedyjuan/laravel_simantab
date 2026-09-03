@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jenjang extends Model
+class Jabatan extends Model
 {
     use HasFactory;
 
-    protected $table = 'acd_ms_jenjang';
+    protected $table = 'hr_ms_jabatan';
 
     protected $fillable = [
         'ulid',
-        'kode_jenjang',
-        'nama_jenjang',
+        'kode_jabatan',
+        'nama_jabatan',
+        'jenis_jabatan',
         'urutan',
-        'status'
+        'status',
     ];
 }

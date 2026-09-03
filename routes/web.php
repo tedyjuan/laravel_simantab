@@ -9,6 +9,9 @@ use App\Livewire\master\MasterTahunAjar;
 use App\Livewire\master\MasterKurikulum;
 use App\Livewire\master\MasterMapel;
 use App\Livewire\master\MasterJenjang;
+use App\Livewire\master\MasterJabatan;
+use App\Livewire\master\MasterGedung;
+use App\Livewire\master\MasterRuangan;
 
 Route::middleware('guest')->group(function () {
     // Halaman login
@@ -26,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/master-kurikulum', MasterKurikulum::class)->name('kurikulum.index');
     Route::livewire('/master-mapel', MasterMapel::class)->name('mapel.index');
     Route::livewire('/master-jenjang', MasterJenjang::class)->name('jenjang.index');
+    Route::livewire('/master-jabatan', MasterJabatan::class)->name('jabatan.index');
+    Route::livewire('/master-gedung', MasterGedung::class)->name('gedung.index');
+    Route::livewire('/master-ruangan', MasterRuangan::class)->name('ruangan.index');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

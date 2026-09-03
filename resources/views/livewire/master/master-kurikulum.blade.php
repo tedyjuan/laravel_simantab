@@ -46,8 +46,8 @@
             @click="
                 modalOpen = true;
                 $wire.set('kurikulum_id', null, false);
-                $wire.set('kode', '', false);
-                $wire.set('nama', '', false);
+                $wire.set('kode_kurikulum', '', false);
+                $wire.set('nama_kurikulum', '', false);
                 $wire.set('deskripsi', '', false);
                 $wire.set('status', 'aktif', false);
             "

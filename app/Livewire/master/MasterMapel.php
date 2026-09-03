@@ -7,6 +7,7 @@ use App\Models\Kurikulum;
 use App\Models\Jenjang;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 class MasterMapel extends Component
 {
@@ -20,7 +21,8 @@ class MasterMapel extends Component
     public ?string $kode_mapel = null;
     public ?string $nama_mapel = null;
     public ?string $kkm = null;
-    public ?string $id_kurikulum = null;
+    public ?string $kode_kurikulum = null;
+    public ?string $kode_jenjang = null;
     public ?string $kelompok = null;
     public ?string $status = null;
     public $is_aktif = false;
@@ -49,7 +51,7 @@ class MasterMapel extends Component
                         ->orWhere('status', 'like', '%' . $this->search . '%');
                 });
             })
-            ->orderBy('kode_mapel', 'asc')
+            ->orderByDesc('created_at')
             ->paginate(10);
 
         return view('livewire.master.master-mapel', [
@@ -64,7 +66,7 @@ class MasterMapel extends Component
      * WAJIB ke server karena harus ambil data dari database.
      * Modal ditampilkan lewat event 'open-modal' yang ditangkap Alpine.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $data = Mapel::findOrFail($id);
 
@@ -101,15 +103,19 @@ class MasterMapel extends Component
             'status'         => 'required|in:aktif,nonaktif',
         ]);
 
-        Mapel::updateOrCreate(
-            ['id' => $this->mapel_id],
-            $validated
-        );
+        if ($this->mapel_id) {
+            // UPDATE
+            Mapel::findOrFail($this->mapel_id)->update($validated);
+            $message = 'Mapel berhasil diperbarui.';
+        } else {
+            // CREATE
+            Mapel::create([
+                ...$validated,
+                'ulid' => (string) Str::ulid(),
+            ]);
 
-        $message = $this->mapel_id
-            ? 'Mapel berhasil diperbarui.'
-            : 'Mapel berhasil ditambahkan.';
-
+            $message = 'Mapel berhasil ditambahkan.';
+        }
         $this->resetInputFields();
         $this->dispatch('close-modal');
         $this->dispatch('tampil-toast', pesan: $message, icon: 'success');

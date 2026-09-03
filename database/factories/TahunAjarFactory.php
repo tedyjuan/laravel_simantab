@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\TahunAjar;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class TahunAjarFactory extends Factory
 {
@@ -13,12 +14,13 @@ class TahunAjarFactory extends Factory
         $ta = $this->faker->unique()->numerify('TA####');
 
         return [
+            'ulid'              => (string) Str::ulid(),
             'kode'              => $ta,
             'nama'              => 'Tahun Ajaran ' . $ta,
             'tanggal_mulai'     => fake()->date(),
             'tanggal_selesai'   => fake()->date(),
             'semester'          => fake()->randomElement(['Ganjil', 'Genap']),
-            'is_aktif'          => fake()->boolean(),
+            'status'            => fake()->randomElement(['aktif', 'nonaktif']),
         ];
     }
 }

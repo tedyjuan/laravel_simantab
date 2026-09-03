@@ -11,36 +11,14 @@ return new class extends Migration
         Schema::create('acd_ms_kelas', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->unique();
+
             $table->string('kode_kelas', 20)->unique();
             $table->string('nama_kelas', 50);
 
-            // Tingkatan
-            $table->foreignId('id_tingkatan')
-                ->constrained('acd_ms_tingkatan')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
+            // dari acd_ms_jenjang
+            $table->string('kode_jenjang', 10);
 
-            // Rombel
-            $table->string('kode_rombel', 10);
-            $table->string('nama_rombel', 50)->nullable();
-
-            // Tahun Ajaran
-            $table->foreignId('id_tahun_ajaran')
-                ->constrained('acd_ms_tahun_ajaran')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
-
-            // Wali Kelas
-            $table->foreignId('id_wali_kelas')
-                ->nullable()
-                ->constrained('hr_ms_pegawai')
-                ->nullOnDelete();
-
-            // Kapasitas
-            $table->unsignedSmallInteger('kapasitas')->default(30);
-
-            // Ruangan
-            $table->string('ruangan', 50)->nullable();
+            $table->unsignedTinyInteger('tingkat');
 
             $table->enum('status', [
                 'aktif',
@@ -51,7 +29,8 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index([
-                'id_tingkatan',
+                'kode_jenjang',
+                'tingkat',
                 'status'
             ]);
         });

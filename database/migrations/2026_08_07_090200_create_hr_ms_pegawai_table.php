@@ -12,8 +12,7 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid')->unique();
             // Business key pegawai
-            $table->string('kode_pegawai', 30)->unique();
-
+            $table->string('kode_pegawai', 30)->nullable()->unique();
             // NIP bersifat opsional
             $table->string('nip', 30)->nullable()->unique();
 

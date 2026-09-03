@@ -13,6 +13,8 @@ class Pegawai extends Model
     protected $table = 'hr_ms_pegawai';
 
     protected $fillable = [
+        'ulid',
+        'kode_pegawai',
         'nip',
         'nama',
         'jenis_kelamin',
@@ -20,8 +22,7 @@ class Pegawai extends Model
         'no_hp',
         'alamat',
         'tanggal_lahir',
-        'jenis_pegawai',
-        'jabatan',
+        'kode_jabatan',
         'tanggal_masuk',
         'status'
     ];

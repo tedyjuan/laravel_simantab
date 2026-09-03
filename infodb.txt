@@ -18,15 +18,6 @@ log	Log/history	audit trail
 rpt	View/report	untuk reporting layer
 
 
-Tipe tabel (sub-prefix)
-Kode	Arti	Contoh isi
-ms	Master	data acuan yang jarang berubah
-trx	Transaksi	header transaksi
-dtl	Detail	child dari trx (line item)
-ref	Referensi/lookup	dropdown, konstanta
-log	Log/history	audit trail
-rpt	View/report	untuk reporting layer
-
 Contoh implementasi
 
 Modul Akademik (acd)
@@ -75,9 +66,13 @@ lib_ms_kategori_buku
 lib_trx_peminjaman
 lib_dtl_peminjaman
 
-Modul Sarpras (inv)
+
+
+Modul inventory/peralatan (inv)
 
 inv_ms_aset
+inv_ms_ruang
+inv_ms_gedung
 inv_ms_kategori_aset
 inv_trx_mutasi_aset
 inv_trx_maintenance
@@ -92,20 +87,4 @@ sys_log_activity
 
 
 
-                 acd_ms_tahun_ajaran
-                         │
-                         ▼
-                    acd_ms_rombel
-                   /      |       \
-                  /       |        \
-                 ▼        ▼         ▼
-       acd_ms_kelas  acd_ms_ruangan  hr_ms_pegawai
-                               
-                 wali_kelas ────────┘
-                       
-                         │
-                         ▼
-                acd_tr_siswa_rombel
-                         │
-                         ▼
-                    acd_ms_siswa
+                

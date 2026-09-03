@@ -12,6 +12,7 @@ class Kurikulum extends Model
     protected $table = 'acd_ms_kurikulum';
 
     protected $fillable = [
+        'ulid',
         'kode_kurikulum',
         'nama_kurikulum',
         'deskripsi',

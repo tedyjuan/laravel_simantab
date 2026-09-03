@@ -12,12 +12,13 @@ class TahunAjar extends Model
     protected $table = 'acd_ms_tahun_ajaran';
 
     protected $fillable = [
+        'ulid',
         'kode',
         'nama',
         'tanggal_mulai',
         'tanggal_selesai',
         'semester',
-        'is_aktif',
+        'status',
         'created_at',
         'updated_at'
     ];

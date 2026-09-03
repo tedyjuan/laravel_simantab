@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'walimurid',
         ]);
         // ========================= // SEED PEGAWAI // =========================
+        $this->call([JabatanSeeder::class,]);
         $this->call([KurikulumSeeder::class,]);
         $this->call([TahunAjarSeeder::class,]);
         $this->call([MapelSeeder::class,]);

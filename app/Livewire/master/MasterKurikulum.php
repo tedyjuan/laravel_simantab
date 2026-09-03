@@ -5,6 +5,7 @@ namespace App\Livewire\master;
 use App\Models\Kurikulum;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 class MasterKurikulum extends Component
 {
@@ -15,8 +16,8 @@ class MasterKurikulum extends Component
 
     // Properti Form (di-bind lewat wire:model, di-reset dari Alpine pakai $wire.set(..., false) saat "Tambah")
     public ?int $kurikulum_id = null;
-    public ?string $kode = null;
-    public ?string $nama = null;
+    public ?string $kode_kurikulum = null;
+    public ?string $nama_kurikulum = null;
     public ?string $deskripsi = null;
     public ?string $status = null;
 
@@ -74,15 +75,23 @@ class MasterKurikulum extends Component
             'deskripsi'        => 'nullable|string',
             'status'           => 'required|in:aktif,nonaktif',
         ]);
+        if ($this->kurikulum_id) {
 
-        Kurikulum::updateOrCreate(
-            ['id' => $this->kurikulum_id],
-            $validated
-        );
+            // UPDATE
+            Kurikulum::findOrFail($this->kurikulum_id)
+                ->update($validated);
 
-        $message = $this->kurikulum_id
-            ? 'Kurikulum berhasil diperbarui.'
-            : 'Kurikulum berhasil ditambahkan.';
+            $message = 'Kurikulum berhasil diperbarui.';
+        } else {
+
+            // CREATE
+            Kurikulum::create([
+                ...$validated,
+                'ulid' => (string) Str::ulid(),
+            ]);
+
+            $message = 'Kurikulum berhasil ditambahkan.';
+        }
 
         $this->resetInputFields();
         $this->dispatch('close-modal');
