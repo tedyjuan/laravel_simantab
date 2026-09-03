@@ -10,7 +10,7 @@
             <span class="text-[#6552E0]">Tahun Ajar</span>
         </nav>
         <h1 class="text-2xl font-bold tracking-tight text-[#21203D] sm:text-[28px]">
-            Data Tahun Ajar
+            Data Tahun Ajar Semester
         </h1>
         <p class="mt-1 text-sm text-[#767492]">
             Kelola Tahun Ajar dalam satu tempat.
@@ -37,7 +37,6 @@
             @click="
                 modalOpen = true;
                 $wire.set('tahun_ajaran_id', null, false);
-                $wire.set('kode', '', false);
                 $wire.set('nama', '', false);
                 $wire.set('tanggal_mulai', '', false); 
                 $wire.set('tanggal_selesai', '', false);
@@ -75,7 +74,7 @@
                             {{-- KODE + AVATAR --}}
                             <td class="py-3.5 pl-6">
                                 <p class="text-sm font-semibold text-[#21203D]">
-                                    {{ $thn_ajar->kode ?? '-' }}
+                                    {{ $thn_ajar->kode_tahun_ajaran ?? '-' }}
                                 </p>
                             </td>
                             {{-- NAMA --}}
@@ -179,15 +178,8 @@
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
                 {{-- KODE + NAMA --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Kode</label>
-                        <input type="text" wire:model="kode"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. 2025/2026" />
-                        @error('kode')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Tahun Ajaran</label>
                         <input type="text" wire:model="nama"

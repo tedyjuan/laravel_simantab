@@ -11,12 +11,10 @@ class TahunAjarFactory extends Factory
     protected $model = TahunAjar::class;
     public function definition(): array
     {
-        $ta = $this->faker->unique()->numerify('TA####');
-
         return [
             'ulid'              => (string) Str::ulid(),
-            'kode_tahun_ajaran' => $ta,
-            'nama'              => 'Tahun Ajaran ' . $ta,
+            'kode_tahun_ajaran' => null,
+            'nama'              => 'Tahun Ajaran',
             'tanggal_mulai'     => fake()->date(),
             'tanggal_selesai'   => fake()->date(),
             'semester'          => fake()->randomElement(['Ganjil', 'Genap']),
