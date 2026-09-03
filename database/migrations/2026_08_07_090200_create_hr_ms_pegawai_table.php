@@ -40,7 +40,12 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('kode_pegawai');
+            // Foreign Key
+            $table->foreign('kode_jabatan')
+                ->references('kode_jabatan')
+                ->on('hr_ms_jabatan')
+                ->nullOnDelete();
+
             $table->index('kode_jabatan');
         });
     }

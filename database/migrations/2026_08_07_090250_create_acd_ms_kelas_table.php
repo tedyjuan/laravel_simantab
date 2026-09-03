@@ -12,11 +12,14 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid')->unique();
 
-            $table->string('kode_kelas', 20)->unique();
+            $table->string('kode_kelas', 20)->nullable()->unique();
             $table->string('nama_kelas', 50);
 
-            // dari acd_ms_jenjang
+            // Relasi ke acd_ms_jenjang
             $table->string('kode_jenjang', 10);
+
+            // Relasi ke acd_ms_tingkatan (composite: kode_jenjang + kode_tingkatan)
+            $table->string('kode_tingkatan', 20);
 
             $table->unsignedTinyInteger('tingkat');
 
@@ -28,8 +31,15 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            // Foreign Keys
+            $table->foreign('kode_jenjang')
+                ->references('kode_jenjang')
+                ->on('acd_ms_jenjang')
+                ->restrictOnDelete();
+
             $table->index([
                 'kode_jenjang',
+                'kode_tingkatan',
                 'tingkat',
                 'status'
             ]);

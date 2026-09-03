@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
 
             $table->enum('role', [
+                'admin',
+                'kepala_sekolah',
                 'guru',
                 'siswa',
                 'walimurid'

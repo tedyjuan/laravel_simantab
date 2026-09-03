@@ -17,14 +17,20 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->string('tempat_lahir', 50)->nullable();
             $table->date('tanggal_lahir')->nullable();
+            $table->enum('agama', [
+                'islam',
+                'kristen',
+                'katolik',
+                'hindu',
+                'budha',
+                'konghucu'
+            ])->nullable();
             $table->text('alamat')->nullable();
             $table->string('no_hp', 20)->nullable();
+            $table->string('email', 100)->nullable();
+            $table->string('foto', 255)->nullable(); // path foto
 
-            $table->foreignId('id_kelas')
-                ->nullable()
-                ->constrained('acd_ms_kelas')
-                ->nullOnDelete();
-
+            // Data wali murid
             $table->string('nama_wali', 100)->nullable();
             $table->string('no_hp_wali', 20)->nullable();
 
@@ -33,7 +39,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['id_kelas', 'status']);
+            $table->index('status');
         });
     }
 

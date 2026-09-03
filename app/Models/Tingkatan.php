@@ -6,20 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Kelas extends Model
+class Tingkatan extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'acd_ms_kelas';
+    protected $table = 'acd_ms_tingkatan';
 
     protected $fillable = [
         'ulid',
-        'kode_kelas',
-        'nama_kelas',
-        'kode_jenjang',
         'kode_tingkatan',
-        'tingkat',
-        'status'
+        'kode_jenjang',
+        'nama_tingkatan',
+        'urutan',
+        'status',
     ];
 
     public function jenjang()

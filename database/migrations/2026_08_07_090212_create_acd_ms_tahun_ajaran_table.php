@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('acd_ms_tahun_ajaran', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->unique();
-            $table->string('kode', 20)->unique(); // contoh: 2025/2026
-            $table->string('nama', 50); // contoh: Tahun Ajaran 2025/2026
+            $table->string('kode_tahun_ajaran', 20)->nullable()->unique(); // contoh: 2025/2026-1
+            $table->string('nama', 50); // contoh: Tahun Ajaran 2025/2026 Ganjil
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->enum('semester', ['ganjil', 'genap']);
@@ -21,6 +21,7 @@ return new class extends Migration
                 'nonaktif'
             ])->default('nonaktif');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

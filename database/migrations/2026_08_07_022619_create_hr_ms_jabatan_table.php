@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid')->unique();
             // Business key
-            $table->string('kode_jabatan', 20)->unique();
+            $table->string('kode_jabatan', 20)->nullable()->unique();
 
             // Nama jabatan
             $table->string('nama_jabatan', 100);
@@ -33,6 +33,7 @@ return new class extends Migration
             ])->default('aktif');
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index([
                 'jenis_jabatan',
@@ -45,16 +46,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('hr_ms_jabatan');
     }
-
-
-    // | kode_jabatan | nama_jabatan         | jenis      |
-    // | ------------ | -------------------- | ---------- |
-    // | KEPSEK       | Kepala Sekolah       | struktural |
-    // | WAKASEK      | Wakil Kepala Sekolah | struktural |
-    // | GURU         | Guru                 | fungsional |
-    // | TU           | Tata Usaha           | pelaksana  |
-    // | ADMIN        | Administrator        | pelaksana  |
-    // | BENDAHARA    | Bendahara            | pelaksana  |
-    // | PUSTAKAWAN   | Pustakawan           | pelaksana  |
-
 };

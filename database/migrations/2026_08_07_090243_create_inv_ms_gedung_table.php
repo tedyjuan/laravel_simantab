@@ -13,7 +13,7 @@ return new class extends Migration
 
             $table->ulid('ulid')->unique();
             // Contoh: GDG-A, GDG-UTAMA
-            $table->string('kode_gedung', 20)->unique();
+            $table->string('kode_gedung', 20)->nullable()->unique();
             // Contoh: Gedung Utama
             $table->string('nama_gedung', 100);
             // Alamat/lokasi gedung jika diperlukan
@@ -30,10 +30,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index([
-                'kode_gedung',
-                'status'
-            ]);
+            // kode_gedung sudah unique(), tidak perlu index tambahan
+            $table->index('status');
         });
     }
 

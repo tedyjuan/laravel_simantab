@@ -15,7 +15,7 @@ class TahunAjarFactory extends Factory
 
         return [
             'ulid'              => (string) Str::ulid(),
-            'kode'              => $ta,
+            'kode_tahun_ajaran' => $ta,
             'nama'              => 'Tahun Ajaran ' . $ta,
             'tanggal_mulai'     => fake()->date(),
             'tanggal_selesai'   => fake()->date(),

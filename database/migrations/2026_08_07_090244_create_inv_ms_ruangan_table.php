@@ -14,7 +14,7 @@ return new class extends Migration
             $table->ulid('ulid')->unique();
 
             // Contoh: R-A101
-            $table->string('kode_ruangan', 20)->unique();
+            $table->string('kode_ruangan', 20)->nullable()->unique();
 
             // Contoh: Ruang Kelas 1A
             $table->string('nama_ruangan', 100);
@@ -51,6 +51,12 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            // Foreign Key
+            $table->foreign('kode_gedung')
+                ->references('kode_gedung')
+                ->on('inv_ms_gedung')
+                ->restrictOnDelete();
 
             $table->index([
                 'kode_gedung',

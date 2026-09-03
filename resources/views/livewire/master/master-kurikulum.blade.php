@@ -46,7 +46,6 @@
             @click="
                 modalOpen = true;
                 $wire.set('kurikulum_id', null, false);
-                $wire.set('kode_kurikulum', '', false);
                 $wire.set('nama_kurikulum', '', false);
                 $wire.set('deskripsi', '', false);
                 $wire.set('status', 'aktif', false);
@@ -182,15 +181,8 @@
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
                 {{-- KODE + NAMA --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Kode</label>
-                        <input type="text" wire:model="kode_kurikulum"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. KUR-MERDEKA" />
-                        @error('kode_kurikulum')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Kurikulum</label>
                         <input type="text" wire:model="nama_kurikulum"
@@ -214,6 +206,7 @@
                 <div>
                     <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
                     <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
+                        <option value="">Pilih Status</option>
                         <option value="aktif">Aktif</option>
                         <option value="nonaktif">Nonaktif</option>
                     </select>

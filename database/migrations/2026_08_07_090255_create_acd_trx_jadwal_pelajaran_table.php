@@ -11,8 +11,9 @@ return new class extends Migration
         Schema::create('acd_trx_jadwal_pelajaran', function (Blueprint $table) {
             $table->id();
             $table->ulid('ulid')->unique();
-            // Kelas
-            $table->string('kode_kelas', 20);
+
+            // Rombel (bukan kelas — jadwal per rombel)
+            $table->string('kode_rombel', 20);
 
             // Mata Pelajaran
             $table->string('kode_mapel', 20);
@@ -36,23 +37,46 @@ return new class extends Migration
             $table->time('jam_mulai');
             $table->time('jam_selesai');
 
-            $table->string('ruangan', 50)->nullable();
+            // Ruangan
+            $table->string('kode_ruangan', 20)->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
+
+            // Foreign Keys
+            $table->foreign('kode_rombel')
+                ->references('kode_rombel')
+                ->on('acd_ms_rombel')
+                ->restrictOnDelete();
+
+            $table->foreign('kode_mapel')
+                ->references('kode_mapel')
+                ->on('acd_ms_mapel')
+                ->restrictOnDelete();
+
+            $table->foreign('kode_pegawai')
+                ->references('kode_pegawai')
+                ->on('hr_ms_pegawai')
+                ->restrictOnDelete();
+
+            $table->foreign('kode_tahun_ajaran')
+                ->references('kode_tahun_ajaran')
+                ->on('acd_ms_tahun_ajaran')
+                ->restrictOnDelete();
+
+            $table->foreign('kode_ruangan')
+                ->references('kode_ruangan')
+                ->on('inv_ms_ruangan')
+                ->nullOnDelete();
 
             // Index
             $table->index([
-                'kode_kelas',
+                'kode_rombel',
                 'hari'
             ]);
 
             $table->index([
                 'kode_pegawai',
-                'hari'
-            ]);
-
-            $table->index([
-                'kode_mapel',
                 'hari'
             ]);
 

@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->ulid('ulid')->unique();
             // Business key dari master jenjang
-            $table->string('kode_tingkatan', 20);  // kode indetifikasi ma jenjang untuk unik
-            $table->string('kode_jenjang', 10); // join ke acd_ms_jenjang.kode_jenjang 
+            $table->string('kode_tingkatan', 20)->nullable()->unique();  // kode identifikasi unik per jenjang
+            $table->string('kode_jenjang', 10); // join ke acd_ms_jenjang.kode_jenjang
             $table->string('nama_tingkatan', 100);
             // Urutan tingkat dalam jenjang
             $table->unsignedTinyInteger('urutan');
@@ -22,6 +22,8 @@ return new class extends Migration
                 'nonaktif'
             ])->default('aktif');
             $table->timestamps();
+            $table->softDeletes();
+
             $table->unique([
                 'kode_jenjang',
                 'kode_tingkatan'
@@ -30,6 +32,12 @@ return new class extends Migration
                 'kode_jenjang',
                 'status'
             ]);
+
+            // Foreign Key
+            $table->foreign('kode_jenjang')
+                ->references('kode_jenjang')
+                ->on('acd_ms_jenjang')
+                ->restrictOnDelete();
         });
     }
 

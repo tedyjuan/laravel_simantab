@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Imports\MapelImport;
 use Illuminate\Database\Seeder;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\SimpleExcel\SimpleExcelReader;
 
 class MapelSeeder extends Seeder
 {

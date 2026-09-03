@@ -16,7 +16,7 @@ class MasterTahunAjar extends Component
 
     // Properti Form (di-bind lewat wire:model, di-reset dari Alpine pakai $wire.set(..., false) saat "Tambah")
     public ?int $tahun_ajaran_id = null;
-    public ?string $kode = null;
+    public ?string $kode_tahun_ajaran = null;
     public ?string $nama = null;
     public ?string $tanggal_mulai = null;
     public ?string $tanggal_selesai = null;
@@ -34,11 +34,11 @@ class MasterTahunAjar extends Component
     public function render()
     {
         $tahun_ajar = TahunAjar::where(function ($query) {
-            $query->where('kode', 'like', '%' . $this->search . '%')
+            $query->where('kode_tahun_ajaran', 'like', '%' . $this->search . '%')
                 ->orWhere('nama', 'like', '%' . $this->search . '%')
                 ->orWhere('semester', 'like', '%' . $this->search . '%');
         })
-            ->orderBy('kode', 'asc')
+            ->orderBy('kode_tahun_ajaran', 'asc')
             ->paginate(10);
 
         return view('livewire.master.master-tahun-ajar', [
@@ -55,7 +55,7 @@ class MasterTahunAjar extends Component
     {
         $data = TahunAjar::findOrFail($id);
         $this->tahun_ajaran_id = $data->id;
-        $this->kode            = $data->kode;
+        $this->kode_tahun_ajaran = $data->kode_tahun_ajaran;
         $this->nama            = $data->nama;
         $this->tanggal_mulai   = $data->tanggal_mulai;
         $this->tanggal_selesai = $data->tanggal_selesai;
@@ -73,7 +73,7 @@ class MasterTahunAjar extends Component
     public function store()
     {
         $validated = $this->validate([
-            'kode'            => 'required|string|max:50|unique:acd_ms_tahun_ajaran,kode,' . $this->tahun_ajaran_id,
+            'kode_tahun_ajaran' => 'required|string|max:50|unique:acd_ms_tahun_ajaran,kode_tahun_ajaran,' . $this->tahun_ajaran_id,
             'nama'            => 'required|string|max:100',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
@@ -126,7 +126,7 @@ class MasterTahunAjar extends Component
     private function resetInputFields()
     {
         $this->tahun_ajaran_id = null;
-        $this->kode = '';
+        $this->kode_tahun_ajaran = '';
         $this->nama = '';
         $this->tanggal_mulai = '';
         $this->tanggal_selesai = '';
