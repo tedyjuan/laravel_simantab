@@ -155,7 +155,8 @@
                         </label>
 
                         <input type="text" wire:model="kode_jenjang"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="Masukkan Kode" />
+                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="Masukkan Kode"
+                            readonly />
 
                         @error('kode_jenjang')
                             <span class="mt-1 block text-xs text-red-500">

@@ -62,7 +62,6 @@ class MasterKelas extends Component
     {
         $kelas              = Kelas::findOrFail($id);
         $this->kelas_id     = $kelas->id;
-        $this->kode_kelas   = $kelas->kode_kelas;
         $this->nama_kelas   = $kelas->nama_kelas;
         $this->kode_jenjang = $kelas->kode_jenjang;
         $this->status       = $kelas->status;

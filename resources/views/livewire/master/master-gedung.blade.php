@@ -181,15 +181,8 @@
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
                 {{-- KODE + NAMA --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Kode Gedung</label>
-                        <input type="text" wire:model="kode_gedung"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. GD-A1" />
-                        @error('kode_gedung')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Gedung</label>
                         <input type="text" wire:model="nama_gedung"

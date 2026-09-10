@@ -14,11 +14,15 @@ class TahunAjarDetail extends Model
 
     protected $fillable = [
         'ulid',
+        'kode_tahun_ajaran_detail',
         'kode_tahun_ajaran_header',
         'nama_tahun_ajaran_detail',
         'semester',
         'tanggal_mulai',
         'tanggal_selesai',
-        'status'
+    ];
+    protected $casts = [
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
     ];
 }

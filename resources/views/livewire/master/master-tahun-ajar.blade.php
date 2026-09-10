@@ -1,5 +1,53 @@
-<div id="halaman_master_tahun_ajar" x-data="{ modalOpen: false, deleteModalOpen: false, modalTitle: '', modalTitleDetail: '' }" x-on:open-modal.window="modalOpen = true"
-    x-on:close-modal.window="modalOpen = false" x-on:close-delete-modal.window="deleteModalOpen = false">
+<div id="halaman_master_tahun_ajar" x-data="{
+    modalOpen: false,
+    deleteModalOpen: false,
+    detailModalOpen: false,
+
+    modalTitle: '',
+    modalTitleDetail: '',
+
+    // DETAIL
+    detailModalSubtitle: '',
+    detailKodeHeader: '',
+    detailNamaHeader: '',
+    detailTahunMulai: '',
+    detailTahunSelesai: '',
+    detailStatus: '',
+
+    // GANJIL
+    detailGanjilKode: '',
+    detailGanjilNama: '',
+    detailGanjilMulai: '',
+    detailGanjilSelesai: '',
+
+    // GENAP
+    detailGenapKode: '',
+    detailGenapNama: '',
+    detailGenapMulai: '',
+    detailGenapSelesai: ''
+}" x-on:open-modal.window="modalOpen = true"
+    x-on:close-modal.window="modalOpen = false" x-on:close-delete-modal.window="deleteModalOpen = false"
+    x-on:open-detail-modal.window="
+        detailModalOpen = true;
+
+        detailKodeHeader = $event.detail.kode_header;
+        detailNamaHeader = $event.detail.nama_header;
+        detailTahunMulai = $event.detail.tahun_mulai;
+        detailTahunSelesai = $event.detail.tahun_selesai;
+        detailStatus = $event.detail.status;
+
+        detailModalSubtitle = detailNamaHeader;
+
+        detailGanjilKode = $event.detail.ganjil.kode;
+        detailGanjilNama = $event.detail.ganjil.nama;
+        detailGanjilMulai = $event.detail.ganjil.tanggal_mulai;
+        detailGanjilSelesai = $event.detail.ganjil.tanggal_selesai;
+
+        detailGenapKode = $event.detail.genap.kode;
+        detailGenapNama = $event.detail.genap.nama;
+        detailGenapMulai = $event.detail.genap.tanggal_mulai;
+        detailGenapSelesai = $event.detail.genap.tanggal_selesai;
+    ">
     {{-- =========================================================
     HEADER
     ========================================================== --}}
@@ -27,19 +75,12 @@
             <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari kode atau nama..."
                 class="grow bg-transparent text-sm placeholder:text-[#B4B1CB] focus:outline-none" />
         </label>
-
-        {{-- Tombol Tambah: 100% client-side, TIDAK ada request ke server.
-             Semua field form dikosongkan langsung lewat $wire.set(..., false),
-             yang cuma "menitipkan" nilai baru ke Livewire tanpa kirim network request.
-             Nilai ini baru benar-benar disinkronkan ke server nanti, dibarengi
-             saat form di-submit (wire:submit="store"). --}}
         <button type="button"
             @click="
                 modalOpen = true;
                 modalTitle = 'Tambah Tahun Ajaran';
                 modalTitleDetail = 'Lengkapi data Tahun Ajaran baru';
                 $wire.set('tahun_ajaran_id', null, false);
-                $wire.set('nama_tahun_ajaran_header', '', false);
                 $wire.set('tahun_mulai', '', false); 
                 $wire.set('tahun_selesai', '', false);
                 $wire.set('status', null, false);
@@ -107,6 +148,10 @@
                             <td class="pr-6">
                                 <div class="flex items-center justify-end gap-1.5">
                                     {{-- Edit: WAJIB ke server, data harus diambil dari DB --}}
+                                    <button type="button" wire:click="showDetail({{ $thn_ajar->id }})" title="Detail"
+                                        class="flex size-8 items-center justify-center rounded-lg text-[#9A97B8] hover:bg-[#EAF1FE] hover:text-[#2E6FE0]">
+                                        <span class="icon-[tabler--eye] size-4"></span>
+                                    </button>
                                     <button type="button" wire:click="edit({{ $thn_ajar->id }})" title="Edit"
                                         @click="
                                             modalTitle = 'Edit Tahun Ajaran';
@@ -173,42 +218,35 @@
             </div>
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
-                {{-- KODE + NAMA --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
 
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Tahun Ajaran</label>
-                        <input type="text" wire:model="nama_tahun_ajaran_header"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm"
-                            placeholder="cth. Tahun Ajaran 2025/2026" />
-                        @error('nama_tahun_ajaran_header')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
                 {{-- TANGGAL MULAI + SELESAI --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tahun Mulai</label>
-                        <input type="date" wire:model="tahun_mulai"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" />
+                        <select wire:model="tahun_mulai" class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
+                            <option value="">Pilih Tahun</option>
+                            @for ($year = date('Y') + 3; $year >= date('Y') - 3; $year--)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
                         @error('tahun_mulai')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tahun Selesai</label>
-                        <input type="date" wire:model="tahun_selesai"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" />
+                        <select wire:model="tahun_selesai" class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
+                            <option value="">Pilih Tahun</option>
+                            @for ($year = date('Y') + 3; $year >= date('Y') - 3; $year--)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
                         @error('tahun_selesai')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
-                {{-- SEMESTER + STATUS --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status Header</label>
                         <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
                             <option value="">Pilih status</option>
                             <option value="aktif">Aktif</option>
@@ -219,6 +257,7 @@
                         @enderror
                     </div>
                 </div>
+
                 {{-- BUTTON --}}
                 <div class="mt-6 flex items-center justify-end gap-2">
                     {{-- Batal: murni client-side, TIDAK ada wire:click --}}
@@ -274,6 +313,296 @@
                     </span>
                 </button>
             </div>
+        </div>
+    </div>
+
+
+
+    {{-- =========================================================
+    MODAL DETAIL TAHUN AJARAN
+    Kontrol tampil/sembunyi murni Alpine
+    ========================================================== --}}
+    <div x-show="detailModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style="display: none;">
+
+        {{-- BACKDROP --}}
+        <div @click="detailModalOpen = false" class="absolute inset-0 bg-[#21203D]/40 backdrop-blur-[2px]">
+        </div>
+
+        {{-- MODAL --}}
+        <div class="relative z-10 max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
+
+            {{-- HEADER --}}
+            <div class="mb-6 flex items-start justify-between">
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex size-9 items-center justify-center rounded-xl bg-[#F3F1FA] text-[#7C6AEF]">
+                            <span class="icon-[tabler--calendar-event] size-5"></span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-[#21203D]">
+                                Detail Tahun Ajaran
+                            </h3>
+
+                            <p class="text-xs text-[#9A97B8]" x-text="detailModalSubtitle">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- CLOSE --}}
+                <button type="button" @click="detailModalOpen = false"
+                    class="flex size-8 items-center justify-center rounded-lg text-[#9A97B8] hover:bg-[#F3F1FA]">
+                    <span class="icon-[tabler--x] size-4"></span>
+                </button>
+
+            </div>
+
+
+            {{-- =====================================================
+            HEADER TAHUN AJARAN
+        ====================================================== --}}
+            <div class="mb-5 rounded-xl border border-[#ECE9F7] bg-[#FAFAFD] p-5">
+
+                <div class="mb-4 flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-bold text-[#21203D]">
+                            Informasi Tahun Ajaran
+                        </h4>
+
+                        <p class="mt-1 text-xs text-[#9A97B8]">
+                            Informasi utama tahun ajaran
+                        </p>
+                    </div>
+
+                    {{-- STATUS --}}
+                    <span x-show="detailStatus === 'aktif'"
+                        class="inline-flex items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+                        <span class="size-1.5 rounded-full bg-green-500"></span>
+                        Aktif
+                    </span>
+
+                    <span x-show="detailStatus === 'nonaktif'"
+                        class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
+                        <span class="size-1.5 rounded-full bg-gray-400"></span>
+                        Nonaktif
+                    </span>
+                </div>
+
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    {{-- KODE --}}
+                    <div>
+                        <p class="mb-1 text-xs text-[#9A97B8]">
+                            Kode Tahun Ajaran
+                        </p>
+
+                        <p class="text-sm font-semibold text-[#544F7A]" x-text="detailKodeHeader">
+                        </p>
+                    </div>
+
+                    {{-- NAMA --}}
+                    <div>
+                        <p class="mb-1 text-xs text-[#9A97B8]">
+                            Nama Tahun Ajaran
+                        </p>
+
+                        <p class="text-sm font-semibold text-[#21203D]" x-text="detailNamaHeader">
+                        </p>
+                    </div>
+
+                    {{-- TAHUN MULAI --}}
+                    <div>
+                        <p class="mb-1 text-xs text-[#9A97B8]">
+                            Tahun Mulai
+                        </p>
+
+                        <p class="text-sm font-semibold text-[#21203D]" x-text="detailTahunMulai">
+                        </p>
+                    </div>
+
+                    {{-- TAHUN SELESAI --}}
+                    <div>
+                        <p class="mb-1 text-xs text-[#9A97B8]">
+                            Tahun Selesai
+                        </p>
+
+                        <p class="text-sm font-semibold text-[#21203D]" x-text="detailTahunSelesai">
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+
+            {{-- =====================================================
+            DETAIL SEMESTER
+        ====================================================== --}}
+            <div>
+
+                <div class="mb-4">
+                    <h4 class="text-sm font-bold text-[#21203D]">
+                        Detail Semester
+                    </h4>
+
+                    <p class="mt-1 text-xs text-[#9A97B8]">
+                        Periode semester pada tahun ajaran
+                    </p>
+                </div>
+
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    {{-- =================================================
+                    SEMESTER GANJIL
+                ================================================== --}}
+                    <div class="rounded-xl border border-[#ECE9F7] bg-white p-5">
+
+                        <div class="mb-4 flex items-center justify-between">
+
+                            <div class="flex items-center gap-3">
+
+                                <div
+                                    class="flex size-9 items-center justify-center rounded-lg bg-[#F3F1FA] text-[#7C6AEF]">
+                                    <span class="icon-[tabler--book-2] size-5"></span>
+                                </div>
+
+                                <div>
+                                    <h5 class="text-sm font-bold text-[#21203D]">
+                                        Semester Ganjil
+                                    </h5>
+
+                                    <p class="text-xs text-[#9A97B8]" x-text="detailGanjilKode">
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <span
+                                class="rounded-full bg-[#F3F1FA] px-2.5 py-1 text-[11px] font-semibold text-[#7C6AEF]">
+                                Ganjil
+                            </span>
+
+                        </div>
+
+
+                        <div class="space-y-3">
+
+                            <div>
+                                <p class="text-xs text-[#9A97B8]">
+                                    Nama
+                                </p>
+
+                                <p class="mt-0.5 text-sm font-medium text-[#544F7A]" x-text="detailGanjilNama">
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-[#9A97B8]">
+                                    Tanggal Mulai
+                                </p>
+
+                                <p class="mt-0.5 text-sm font-medium text-[#544F7A]" x-text="detailGanjilMulai">
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-[#9A97B8]">
+                                    Tanggal Selesai
+                                </p>
+
+                                <p class="mt-0.5 text-sm font-medium text-[#544F7A]" x-text="detailGanjilSelesai">
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- =================================================
+                    SEMESTER GENAP
+                ================================================== --}}
+                    <div class="rounded-xl border border-[#ECE9F7] bg-white p-5">
+
+                        <div class="mb-4 flex items-center justify-between">
+
+                            <div class="flex items-center gap-3">
+
+                                <div
+                                    class="flex size-9 items-center justify-center rounded-lg bg-[#F3F1FA] text-[#7C6AEF]">
+                                    <span class="icon-[tabler--book-2] size-5"></span>
+                                </div>
+
+                                <div>
+                                    <h5 class="text-sm font-bold text-[#21203D]">
+                                        Semester Genap
+                                    </h5>
+
+                                    <p class="text-xs text-[#9A97B8]" x-text="detailGenapKode">
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <span
+                                class="rounded-full bg-[#F3F1FA] px-2.5 py-1 text-[11px] font-semibold text-[#7C6AEF]">
+                                Genap
+                            </span>
+
+                        </div>
+
+
+                        <div class="space-y-3">
+
+                            <div>
+                                <p class="text-xs text-[#9A97B8]">
+                                    Nama
+                                </p>
+
+                                <p class="mt-0.5 text-sm font-medium text-[#544F7A]" x-text="detailGenapNama">
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-[#9A97B8]">
+                                    Tanggal Mulai
+                                </p>
+
+                                <p class="mt-0.5 text-sm font-medium text-[#544F7A]" x-text="detailGenapMulai">
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-[#9A97B8]">
+                                    Tanggal Selesai
+                                </p>
+
+                                <p class="mt-0.5 text-sm font-medium text-[#544F7A]" x-text="detailGenapSelesai">
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            {{-- FOOTER --}}
+            <div class="mt-6 flex justify-end">
+
+                <button type="button" @click="detailModalOpen = false"
+                    class="btn border border-[#ECE9F7] bg-white text-[#544F7A] hover:bg-[#F3F1FA]">
+                    Tutup
+                </button>
+
+            </div>
+
         </div>
     </div>
 </div>

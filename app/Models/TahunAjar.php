@@ -20,4 +20,13 @@ class TahunAjar extends Model
         'tahun_selesai',
         'status'
     ];
+
+    public function details()
+    {
+        return $this->hasMany(
+            TahunAjarDetail::class,
+            'kode_tahun_ajaran_header',
+            'kode_tahun_ajaran_header'
+        );
+    }
 }

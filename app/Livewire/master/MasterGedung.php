@@ -16,7 +16,6 @@ class MasterGedung extends Component
 
     // Properti Form (di-bind lewat wire:model, di-reset dari Alpine pakai $wire.set(..., false) saat "Tambah")
     public ?int $gedung_id = null;
-    public ?string $kode_gedung = null;
     public ?string $nama_gedung = null;
     public ?string $jumlah_lantai = null;
     public ?string $alamat = null;
@@ -58,7 +57,6 @@ class MasterGedung extends Component
     {
         $data                = Gedung::findOrFail($id);
         $this->gedung_id     = $data->id;
-        $this->kode_gedung   = $data->kode_gedung;
         $this->nama_gedung   = $data->nama_gedung;
         $this->jumlah_lantai = $data->jumlah_lantai;
         $this->deskripsi     = $data->deskripsi;
@@ -76,7 +74,6 @@ class MasterGedung extends Component
     public function store()
     {
         $validated = $this->validate([
-            'kode_gedung'   => 'required|string|max:50|unique:inv_ms_gedung,kode_gedung,' . $this->gedung_id,
             'nama_gedung'   => 'required|string|max:100',
             'jumlah_lantai' => 'required|string|max:100',
             'deskripsi'     => 'nullable|string|max:100',
@@ -89,9 +86,13 @@ class MasterGedung extends Component
             $message = 'Gedung berhasil diperbarui.';
         } else {
             // CREATE
-            Gedung::create([
+            $Gedung = Gedung::create([
                 ...$validated,
                 'ulid' => (string) Str::ulid(),
+            ]);
+            // Generate kode berdasarkan ID
+            $Gedung->update([
+                'kode_gedung' => 'GDG' . str_pad($Gedung->id, 3, '0', STR_PAD_LEFT),
             ]);
 
             $message = 'Gedung berhasil ditambahkan.';

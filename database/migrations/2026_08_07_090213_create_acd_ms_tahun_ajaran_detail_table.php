@@ -22,11 +22,6 @@ return new class extends Migration
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
 
-            $table->enum('status', [
-                'aktif',
-                'nonaktif'
-            ])->default('nonaktif');
-
             $table->timestamps();
             $table->softDeletes();
 
@@ -38,8 +33,8 @@ return new class extends Migration
 
             // Kasih nama custom yang pendek, biar gak kena limit 64 karakter
             $table->index(
-                ['kode_tahun_ajaran_header', 'semester', 'status'],
-                'idx_tad_header_semester_status'
+                ['kode_tahun_ajaran_header', 'semester'],
+                'idx_tad_header_semester'
             );
         });
     }

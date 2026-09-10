@@ -48,7 +48,6 @@ class TahunAjarSeeder extends Seeder
                 semester: 'ganjil',
                 tanggalMulai: "{$tahunAwal}-07-01",
                 tanggalSelesai: "{$tahunAwal}-12-31",
-                status: $set_status,
             );
 
             // =========================
@@ -61,7 +60,6 @@ class TahunAjarSeeder extends Seeder
                 semester: 'genap',
                 tanggalMulai: "{$tahunAkhir}-01-01",
                 tanggalSelesai: "{$tahunAkhir}-06-30",
-                status: $set_status,
             );
         }
     }
@@ -72,7 +70,6 @@ class TahunAjarSeeder extends Seeder
         string $semester,
         string $tanggalMulai,
         string $tanggalSelesai,
-        string $status,
     ): void {
         TahunAjarDetail::updateOrCreate(
             [
@@ -85,7 +82,6 @@ class TahunAjarSeeder extends Seeder
                 'semester'                 => $semester,
                 'tanggal_mulai'            => $tanggalMulai,
                 'tanggal_selesai'          => $tanggalSelesai,
-                'status'                   => $status,
             ]
         );
     }

@@ -159,7 +159,7 @@
                             Kode
                         </label>
 
-                        <input type="text" wire:model="kode_jabatan"
+                        <input type="text" wire:model="kode_jabatan" readonly
                             class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="Masukkan Kode" />
 
                         @error('kode_jabatan')
