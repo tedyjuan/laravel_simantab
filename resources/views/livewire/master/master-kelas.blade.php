@@ -196,7 +196,7 @@
 
                 </div>
                 {{-- KODE KELAS + NAMA KELAS --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Kelas</label>
@@ -206,11 +206,6 @@
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
-                {{--  Status --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
                         <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
