@@ -20,8 +20,6 @@ class MasterKelas extends Component
     public ?string $kode_kelas = null;
     public ?string $nama_kelas = null;
     public ?string $kode_jenjang = null;
-    public ?string $kode_tingkatan = null;
-    public ?string $tingkat = null;
     public ?string $status = null;
 
     // Untuk proses delete (di-set dari Alpine pakai $wire.set(..., false) saat klik icon hapus)
@@ -43,8 +41,6 @@ class MasterKelas extends Component
                     $q->where('kode_kelas', 'like', '%' . $this->search . '%')
                         ->orWhere('nama_kelas', 'like', '%' . $this->search . '%')
                         ->orWhere('kode_jenjang', 'like', '%' . $this->search . '%')
-                        ->orWhere('kode_tingkatan', 'like', '%' . $this->search . '%')
-                        ->orWhere('tingkat', 'like', '%' . $this->search . '%')
                         ->orWhere('status', 'like', '%' . $this->search . '%');
                 });
             })
@@ -69,8 +65,6 @@ class MasterKelas extends Component
         $this->kode_kelas   = $kelas->kode_kelas;
         $this->nama_kelas   = $kelas->nama_kelas;
         $this->kode_jenjang = $kelas->kode_jenjang;
-        $this->kode_tingkatan = $kelas->kode_tingkatan;
-        $this->tingkat      = $kelas->tingkat;
         $this->status       = $kelas->status;
 
         $this->resetValidation();
@@ -84,15 +78,14 @@ class MasterKelas extends Component
      */
     public function store()
     {
+        $this->nama_kelas = strtoupper($this->nama_kelas);
         $validated = $this->validate([
             'kode_jenjang'   => 'required|string|max:50',
-            'kode_tingkatan' => 'required|string|max:50',
             'nama_kelas'     => 'required|string|max:50',
-            'tingkat'      => 'nullable|string|max:50',
             'status'       => 'required|in:aktif,nonaktif',
         ]);
         // Generate kode kelas
-        $kodeKelas = 'KLS-' . strtoupper($this->kode_tingkatan) . '-' . $this->tingkat;
+        $kodeKelas = 'KLS-' . strtoupper($this->kode_jenjang);
         // Cek apakah kode sudah digunakan oleh kelas lain
         $kodeSudahAda = Kelas::where('kode_kelas', $kodeKelas)
             ->when($this->kelas_id, function ($query) {
@@ -101,11 +94,9 @@ class MasterKelas extends Component
             ->exists();
 
         if ($kodeSudahAda) {
-            $this->addError('kode_tingkatan', "Kombinasi tingkatan dan tingkat tersebut sudah digunakan ({$kodeKelas}).");
+            $this->addError('nama_kelas', "Kombinasi jenjang dan tingkat tersebut sudah digunakan ({$kodeKelas}).");
             return;
         }
-
-        $validated['kode_kelas'] = $kodeKelas;
 
         if ($this->kelas_id) {
             // UPDATE
@@ -113,12 +104,15 @@ class MasterKelas extends Component
             $message = 'Kelas berhasil diperbarui.';
         } else {
             // CREATE
-            Kelas::create([
+            $kelas = Kelas::create([
                 ...$validated,
                 'ulid' => (string) Str::ulid(),
             ]);
-
-            $message = 'Kelas berhasil ditambahkan.';
+            // Generate kode berdasarkan ID
+            $kelas->update([
+                'kode_kelas' => 'KLS-' . str_pad($kelas->id, 3, '0', STR_PAD_LEFT),
+            ]);
+            $message = 'Mapel berhasil ditambahkan.';
         }
         $this->resetInputFields();
         $this->dispatch('close-modal');
@@ -145,8 +139,6 @@ class MasterKelas extends Component
         $this->kode_kelas = '';
         $this->nama_kelas = '';
         $this->kode_jenjang = null;
-        $this->kode_tingkatan = null;
-        $this->tingkat = '';
         $this->status = '';
         $this->resetValidation();
     }

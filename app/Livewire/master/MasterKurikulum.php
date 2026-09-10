@@ -85,10 +85,9 @@ class MasterKurikulum extends Component
                 ...$validated,
                 'ulid' => (string) Str::ulid(),
             ]);
-
             // Generate kode berdasarkan ID
             $kurikulum->update([
-                'kode_kurikulum' => 'KKM' . $kurikulum->id,
+                'kode_kurikulum' => 'KKM' . str_pad($kurikulum->id, 3, '0', STR_PAD_LEFT),
             ]);
 
             $message = 'Kurikulum berhasil ditambahkan.';

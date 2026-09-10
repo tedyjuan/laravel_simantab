@@ -18,7 +18,6 @@ class MasterMapel extends Component
 
     // Properti Form (di-bind lewat wire:model, di-reset dari Alpine pakai $wire.set(..., false) saat "Tambah")
     public ?int $mapel_id = null;
-    public ?string $kode_mapel = null;
     public ?string $nama_mapel = null;
     public ?string $kkm = null;
     public ?string $kode_kurikulum = null;
@@ -55,9 +54,9 @@ class MasterMapel extends Component
             ->paginate(10);
 
         return view('livewire.master.master-mapel', [
-            'mapels'      => $mapels,
-            'kurikulums'  => Kurikulum::orderBy('kode_kurikulum', 'asc')->get(),
-            'jenjangs'    => Jenjang::orderBy('kode_jenjang', 'asc')->get(),
+            'mapels'     => $mapels,
+            'kurikulums' => Kurikulum::where('status', 'aktif')->orderBy('kode_kurikulum', 'asc')->get(),
+            'jenjangs'   => Jenjang::where('status', 'aktif')->orderBy('kode_jenjang', 'asc')->get(),
         ]);
     }
 
@@ -71,7 +70,6 @@ class MasterMapel extends Component
         $data = Mapel::findOrFail($id);
 
         $this->mapel_id       = $data->id;
-        $this->kode_mapel     = $data->kode_mapel;
         $this->nama_mapel     = $data->nama_mapel;
         $this->kkm            = $data->kkm;
         $this->kode_kurikulum = $data->kode_kurikulum;
@@ -91,10 +89,8 @@ class MasterMapel extends Component
     public function store()
     {
 
-        $this->kode_mapel = strtoupper($this->kode_mapel);
         $this->nama_mapel = ucwords(strtolower($this->nama_mapel));
         $validated = $this->validate([
-            'kode_mapel'     => 'required|string|max:50|unique:acd_ms_mapel,kode_mapel,' . $this->mapel_id,
             'nama_mapel'     => 'required|string|max:100',
             'kkm'            => 'required|numeric|min:0|max:100',
             'kode_kurikulum' => 'required|exists:acd_ms_kurikulum,kode_kurikulum',
@@ -105,15 +101,24 @@ class MasterMapel extends Component
 
         if ($this->mapel_id) {
             // UPDATE
-            Mapel::findOrFail($this->mapel_id)->update($validated);
+            $mapel = Mapel::findOrFail($this->mapel_id);
+
+            $mapel->update([
+                ...$validated,
+                'kode_mapel' => 'MPL-' . $this->kode_jenjang . '-' . str_pad($mapel->id, 3, '0', STR_PAD_LEFT),
+            ]);
+
             $message = 'Mapel berhasil diperbarui.';
         } else {
             // CREATE
-            Mapel::create([
+            $mapel = Mapel::create([
                 ...$validated,
                 'ulid' => (string) Str::ulid(),
             ]);
-
+            // Generate kode berdasarkan ID
+            $mapel->update([
+                'kode_mapel' => 'MPL-' . $this->kode_jenjang . '-' . str_pad($mapel->id, 3, '0', STR_PAD_LEFT),
+            ]);
             $message = 'Mapel berhasil ditambahkan.';
         }
         $this->resetInputFields();
@@ -137,7 +142,6 @@ class MasterMapel extends Component
     private function resetInputFields()
     {
         $this->mapel_id = null;
-        $this->kode_mapel = '';
         $this->nama_mapel = '';
         $this->kkm = '';
         $this->kode_kurikulum = '';

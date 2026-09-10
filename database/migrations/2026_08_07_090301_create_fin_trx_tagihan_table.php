@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('kode_jenis_pembayaran', 20);
 
             // Tahun Ajaran
-            $table->string('kode_tahun_ajaran', 20);
+            $table->string('kode_tahun_ajaran_header', 20);
 
             // Bulan (untuk pembayaran bulanan seperti SPP, 1-12)
             $table->unsignedTinyInteger('bulan')->nullable();
@@ -51,12 +51,15 @@ return new class extends Migration
                 ->on('fin_ms_jenis_pembayaran')
                 ->restrictOnDelete();
 
-            $table->foreign('kode_tahun_ajaran')
-                ->references('kode_tahun_ajaran')
-                ->on('acd_ms_tahun_ajaran')
+            $table->foreign('kode_tahun_ajaran_header')
+                ->references('kode_tahun_ajaran_header')
+                ->on('acd_ms_tahun_ajaran_header')
                 ->restrictOnDelete();
 
-            $table->index(['nis', 'kode_tahun_ajaran', 'status']);
+            $table->index(
+                ['nis', 'kode_tahun_ajaran_header', 'status'],
+                'idx_fin_trx_tagihan_jenis_tahun'
+            );
             $table->index(['kode_jenis_pembayaran', 'status']);
         });
     }

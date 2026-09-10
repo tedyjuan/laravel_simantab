@@ -1,4 +1,4 @@
-<div id="halaman_master_kelas" x-data="{ modalOpen: false, deleteModalOpen: false }" x-on:open-modal.window="modalOpen = true"
+<div id="halaman_master_kelas" x-data="{ modalOpen: false, deleteModalOpen: false, modalTitle: '', modalTitleDetail: '' }" x-on:open-modal.window="modalOpen = true"
     x-on:close-modal.window="modalOpen = false" x-on:close-delete-modal.window="deleteModalOpen = false">
 
     {{-- =========================================================
@@ -45,10 +45,11 @@
         <button type="button"
             @click="
                 modalOpen = true;
+                modalTitle = 'Tambah Kelas';
+                modalTitleDetail = 'Lengkapi data Kelas baru';
                 $wire.set('kelas_id', null, false);
                 $wire.set('nama_kelas', '', false);
                 $wire.set('kode_jenjang', '', false);
-                $wire.set('tingkat', null, false);
                 $wire.set('status', 'aktif', false);
             "
             class="btn shrink-0 border-none bg-[#7C6AEF] text-white shadow-[0_10px_20px_-8px_rgba(124,106,239,0.55)] hover:bg-[#6552E0]">
@@ -68,8 +69,7 @@
                     <tr class="border-b border-[#ECE9F7] bg-[#FBFAFE] text-xs uppercase tracking-wide text-[#9A97B8]">
                         <th class="py-3.5 pl-6">Kode Kelas</th>
                         <th>Nama Kelas</th>
-                        <th>Kode Tingkatan</th>
-                        <th>Tingkat</th>
+                        <th>Jenjang </th>
                         <th>Status</th>
                         <th class="pr-6 text-right">Aksi</th>
                     </tr>
@@ -90,14 +90,10 @@
                             <td class="text-sm text-[#544F7A]">
                                 {{ $kelas->nama_kelas ?? '-' }}
                             </td>
-                            {{-- TINGKAT --}}
                             <td class="text-sm text-[#544F7A]">
                                 {{ $kelas->kode_jenjang ?? '-' }}
                             </td>
-                            {{-- JURUSAN --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ $kelas->tingkat ?? '-' }}
-                            </td>
+
                             {{-- STATUS --}}
                             <td>
                                 @php
@@ -116,6 +112,10 @@
                                 <div class="flex items-center justify-end gap-1.5">
                                     {{-- Edit: WAJIB ke server, data harus diambil dari DB --}}
                                     <button type="button" wire:click="edit({{ $kelas->id }})" title="Edit"
+                                        @click="
+                                            modalTitle = 'Edit Kelas';
+                                           modalTitleDetail = 'Perbarui data Kelas';
+                                        "
                                         class="flex size-8 items-center justify-center rounded-lg text-[#9A97B8] hover:bg-[#EAF1FE] hover:text-[#2E6FE0]">
                                         <span class="icon-[tabler--edit] size-4"></span>
                                     </button>
@@ -166,12 +166,8 @@
             {{-- HEADER --}}
             <div class="mb-5 flex items-start justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-[#21203D]">
-                        {{ $kelas_id ? 'Edit Kelas' : 'Tambah Kelas' }}
-                    </h3>
-                    <p class="text-xs text-[#9A97B8]">
-                        {{ $kelas_id ? 'Perbarui data kelas' : 'Lengkapi data kelas baru' }}
-                    </p>
+                    <h3 class="text-lg font-bold text-[#21203D]" id="modalTitle" x-text="modalTitle"> </h3>
+                    <p class="text-xs text-[#9A97B8]" id="modalTitleDetail" x-text="modalTitleDetail">
                 </div>
                 {{-- Tombol X: murni client-side --}}
                 <button type="button" @click="modalOpen = false"
@@ -181,41 +177,6 @@
             </div>
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
-                {{-- KODE KELAS + NAMA KELAS --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
-
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Kelas</label>
-                        <input type="text" wire:model="nama_kelas"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. X IPA 1" />
-                        @error('nama_kelas')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                {{-- TINGKAT + Status --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tingkat</label>
-                        <input type="number" wire:model="tingkat" min="1" max="255"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. 10" />
-                        @error('tingkat')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
-                        <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Nonaktif</option>
-                        </select>
-                        @error('status')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
                 {{--  jenjang --}}
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
                     <div>
@@ -234,6 +195,35 @@
                     </div>
 
                 </div>
+                {{-- KODE KELAS + NAMA KELAS --}}
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Kelas</label>
+                        <input type="text" wire:model="nama_kelas"
+                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. Kelas 1 SD" />
+                        @error('nama_kelas')
+                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                {{--  Status --}}
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
+                        <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Nonaktif</option>
+                        </select>
+                        @error('status')
+                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+
                 {{-- BUTTON --}}
                 <div class="mt-6 flex items-center justify-end gap-2">
                     {{-- Batal: murni client-side, TIDAK ada wire:click --}}

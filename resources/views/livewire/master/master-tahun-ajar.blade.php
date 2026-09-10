@@ -1,4 +1,4 @@
-<div id="halaman_master_tahun_ajar" x-data="{ modalOpen: false, deleteModalOpen: false }" x-on:open-modal.window="modalOpen = true"
+<div id="halaman_master_tahun_ajar" x-data="{ modalOpen: false, deleteModalOpen: false, modalTitle: '', modalTitleDetail: '' }" x-on:open-modal.window="modalOpen = true"
     x-on:close-modal.window="modalOpen = false" x-on:close-delete-modal.window="deleteModalOpen = false">
     {{-- =========================================================
     HEADER
@@ -36,11 +36,12 @@
         <button type="button"
             @click="
                 modalOpen = true;
+                modalTitle = 'Tambah Tahun Ajaran';
+                modalTitleDetail = 'Lengkapi data Tahun Ajaran baru';
                 $wire.set('tahun_ajaran_id', null, false);
-                $wire.set('nama', '', false);
-                $wire.set('tanggal_mulai', '', false); 
-                $wire.set('tanggal_selesai', '', false);
-                $wire.set('semester', '', false);
+                $wire.set('nama_tahun_ajaran_header', '', false);
+                $wire.set('tahun_mulai', '', false); 
+                $wire.set('tahun_selesai', '', false);
                 $wire.set('status', null, false);
             "
             class="btn shrink-0 border-none bg-[#7C6AEF] text-white shadow-[0_10px_20px_-8px_rgba(124,106,239,0.55)] hover:bg-[#6552E0]">
@@ -59,10 +60,9 @@
                 <thead>
                     <tr class="border-b border-[#ECE9F7] bg-[#FBFAFE] text-xs uppercase tracking-wide text-[#9A97B8]">
                         <th class="py-3.5 pl-6">Kode</th>
-                        <th>Nama Tahun Ajaran</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Tanggal Selesai</th>
-                        <th>Semester</th>
+                        <th>Nama Tahun Ajaran Header</th>
+                        <th>Tahun Mulai</th>
+                        <th>Tahun Selesai</th>
                         <th>Status</th>
                         <th class="pr-6 text-right">Aksi</th>
                     </tr>
@@ -74,24 +74,20 @@
                             {{-- KODE + AVATAR --}}
                             <td class="py-3.5 pl-6">
                                 <p class="text-sm font-semibold text-[#21203D]">
-                                    {{ $thn_ajar->kode_tahun_ajaran ?? '-' }}
+                                    {{ $thn_ajar->kode_tahun_ajaran_header ?? '-' }}
                                 </p>
                             </td>
                             {{-- NAMA --}}
                             <td class="text-sm text-[#544F7A]">
-                                {{ $thn_ajar->nama ?? '-' }}
+                                {{ $thn_ajar->nama_tahun_ajaran_header ?? '-' }}
                             </td>
                             {{-- TANGGAL MULAI --}}
                             <td class="text-sm text-[#544F7A]">
-                                {{ $thn_ajar->tanggal_mulai ? \Carbon\Carbon::parse($thn_ajar->tanggal_mulai)->format('d M Y') : '-' }}
+                                {{ $thn_ajar->tahun_mulai }}
                             </td>
                             {{-- TANGGAL SELESAI --}}
                             <td class="text-sm text-[#544F7A]">
-                                {{ $thn_ajar->tanggal_selesai ? \Carbon\Carbon::parse($thn_ajar->tanggal_selesai)->format('d M Y') : '-' }}
-                            </td>
-                            {{-- SEMESTER --}}
-                            <td class="text-sm text-[#544F7A]">
-                                {{ $thn_ajar->semester ?? '-' }}
+                                {{ $thn_ajar->tahun_selesai }}
                             </td>
                             {{-- STATUS --}}
                             <td>
@@ -112,6 +108,10 @@
                                 <div class="flex items-center justify-end gap-1.5">
                                     {{-- Edit: WAJIB ke server, data harus diambil dari DB --}}
                                     <button type="button" wire:click="edit({{ $thn_ajar->id }})" title="Edit"
+                                        @click="
+                                            modalTitle = 'Edit Tahun Ajaran';
+                                           modalTitleDetail = 'Perbarui data Tahun Ajaran';
+                                        "
                                         class="flex size-8 items-center justify-center rounded-lg text-[#9A97B8] hover:bg-[#EAF1FE] hover:text-[#2E6FE0]">
                                         <span class="icon-[tabler--edit] size-4"></span>
                                     </button>
@@ -162,12 +162,8 @@
             {{-- HEADER --}}
             <div class="mb-5 flex items-start justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-[#21203D]">
-                        {{ $tahun_ajaran_id ? 'Edit Tahun Ajaran' : 'Tambah Tahun Ajaran' }}
-                    </h3>
-                    <p class="text-xs text-[#9A97B8]">
-                        {{ $tahun_ajaran_id ? 'Perbarui data tahun ajaran' : 'Lengkapi data tahun ajaran baru' }}
-                    </p>
+                    <h3 class="text-lg font-bold text-[#21203D]" id="modalTitle" x-text="modalTitle"> </h3>
+                    <p class="text-xs text-[#9A97B8]" id="modalTitleDetail" x-text="modalTitleDetail"></p>
                 </div>
                 {{-- Tombol X: murni client-side --}}
                 <button type="button" @click="modalOpen = false"
@@ -182,10 +178,10 @@
 
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Tahun Ajaran</label>
-                        <input type="text" wire:model="nama"
+                        <input type="text" wire:model="nama_tahun_ajaran_header"
                             class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm"
                             placeholder="cth. Tahun Ajaran 2025/2026" />
-                        @error('nama')
+                        @error('nama_tahun_ajaran_header')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -193,36 +189,24 @@
                 {{-- TANGGAL MULAI + SELESAI --}}
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tanggal Mulai</label>
-                        <input type="date" wire:model="tanggal_mulai"
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tahun Mulai</label>
+                        <input type="date" wire:model="tahun_mulai"
                             class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" />
-                        @error('tanggal_mulai')
+                        @error('tahun_mulai')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tanggal Selesai</label>
-                        <input type="date" wire:model="tanggal_selesai"
+                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Tahun Selesai</label>
+                        <input type="date" wire:model="tahun_selesai"
                             class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" />
-                        @error('tanggal_selesai')
+                        @error('tahun_selesai')
                             <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
                 {{-- SEMESTER + STATUS --}}
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Semester
-                        </label>
-                        <select wire:model="semester" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">
-                            <option value="">Pilih semester</option>
-                            <option value="ganjil">Ganjil</option>
-                            <option value="genap">Genap</option>
-                        </select>
-                        @error('semester')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Status</label>
                         <select wire:model="status" class="select w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm">

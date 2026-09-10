@@ -6,18 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TahunAjar extends Model
+class TahunAjarDetail extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'acd_ms_tahun_ajaran_header';
+    protected $table = 'acd_ms_tahun_ajaran_detail';
 
     protected $fillable = [
         'ulid',
         'kode_tahun_ajaran_header',
-        'nama_tahun_ajaran_header',
-        'tahun_mulai',
-        'tahun_selesai',
+        'nama_tahun_ajaran_detail',
+        'semester',
+        'tanggal_mulai',
+        'tanggal_selesai',
         'status'
     ];
 }

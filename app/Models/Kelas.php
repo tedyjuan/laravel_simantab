@@ -17,8 +17,6 @@ class Kelas extends Model
         'kode_kelas',
         'nama_kelas',
         'kode_jenjang',
-        'kode_tingkatan',
-        'tingkat',
         'status'
     ];
 

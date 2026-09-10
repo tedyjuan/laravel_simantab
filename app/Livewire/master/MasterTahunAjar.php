@@ -16,10 +16,9 @@ class MasterTahunAjar extends Component
 
     // Properti Form (di-bind lewat wire:model, di-reset dari Alpine pakai $wire.set(..., false) saat "Tambah")
     public ?int $tahun_ajaran_id = null;
-    public ?string $nama = null;
-    public ?string $tanggal_mulai = null;
-    public ?string $tanggal_selesai = null;
-    public ?string $semester = null;
+    public ?string $nama_tahun_ajaran_header = null;
+    public ?int $tahun_mulai = null;
+    public ?int $tahun_selesai = null;
     public ?string $status = null;
 
     // Untuk proses delete (di-set dari Alpine pakai $wire.set(..., false) saat klik icon hapus)
@@ -33,9 +32,11 @@ class MasterTahunAjar extends Component
     public function render()
     {
         $tahun_ajar = TahunAjar::where(function ($query) {
-            $query->where('kode_tahun_ajaran', 'like', '%' . $this->search . '%')
-                ->orWhere('nama', 'like', '%' . $this->search . '%')
-                ->orWhere('semester', 'like', '%' . $this->search . '%');
+            $query->where('kode_tahun_ajaran_header', 'like', '%' . $this->search . '%')
+                ->orWhere('nama_tahun_ajaran_header', 'like', '%' . $this->search . '%')
+                ->orWhere('tahun_mulai', 'like', '%' . $this->search . '%')
+                ->orWhere('tahun_selesai', 'like', '%' . $this->search . '%')
+                ->orWhere('status', 'like', '%' . $this->search . '%');
         })
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -52,13 +53,12 @@ class MasterTahunAjar extends Component
      */
     public function edit(string $id)
     {
-        $data                    = TahunAjar::findOrFail($id);
-        $this->tahun_ajaran_id   = $data->id;
-        $this->nama              = $data->nama;
-        $this->tanggal_mulai     = $data->tanggal_mulai;
-        $this->tanggal_selesai   = $data->tanggal_selesai;
-        $this->semester          = $data->semester;
-        $this->status            = $data->status;
+        $data                           = TahunAjar::findOrFail($id);
+        $this->tahun_ajaran_id          = $data->id;
+        $this->nama_tahun_ajaran_header = $data->nama_tahun_ajaran_header;
+        $this->tahun_mulai              = $data->tahun_mulai;
+        $this->tahun_selesai            = $data->tahun_selesai;
+        $this->status                   = $data->status;
         $this->resetValidation();
         $this->dispatch('open-modal');
     }
@@ -71,11 +71,10 @@ class MasterTahunAjar extends Component
     public function store()
     {
         $validated = $this->validate([
-            'nama'            => 'required|string|max:100',
-            'tanggal_mulai'   => 'required|date',
-            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'semester'        => 'required|in:ganjil,genap',
-            'status'          => 'required|in:aktif,nonaktif',
+            'nama_tahun_ajaran_header' => 'required|string|max:100',
+            'tahun_mulai'              => 'required|date',
+            'tahun_selesai'            => 'required|date|after:tahun_mulai',
+            'status'                   => 'required|in:aktif,nonaktif',
         ]);
 
         if ($this->tahun_ajaran_id) {
@@ -92,7 +91,7 @@ class MasterTahunAjar extends Component
 
             // Generate kode berdasarkan ID
             $TahunAjar->update([
-                'kode_tahun_ajaran' => 'TAS' . str_pad($TahunAjar->id, 3, '0', STR_PAD_LEFT),
+                'kode_tahun_ajaran_header' => 'TAH' . str_pad($TahunAjar->id, 3, '0', STR_PAD_LEFT),
             ]);
 
             $message = 'Tahun ajaran berhasil ditambahkan.';
@@ -125,11 +124,9 @@ class MasterTahunAjar extends Component
     private function resetInputFields()
     {
         $this->tahun_ajaran_id = null;
-        $this->kode_tahun_ajaran = '';
-        $this->nama = '';
-        $this->tanggal_mulai = '';
-        $this->tanggal_selesai = '';
-        $this->semester = '';
+        $this->nama_tahun_ajaran_header = '';
+        $this->tahun_mulai = '';
+        $this->tahun_selesai = '';
         $this->status = '';
         $this->resetValidation();
     }

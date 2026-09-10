@@ -18,10 +18,6 @@ return new class extends Migration
             // Relasi ke acd_ms_jenjang
             $table->string('kode_jenjang', 10);
 
-            // Relasi ke acd_ms_tingkatan (composite: kode_jenjang + kode_tingkatan)
-            $table->string('kode_tingkatan', 20);
-
-            $table->unsignedTinyInteger('tingkat');
 
             $table->enum('status', [
                 'aktif',
@@ -39,8 +35,6 @@ return new class extends Migration
 
             $table->index([
                 'kode_jenjang',
-                'kode_tingkatan',
-                'tingkat',
                 'status'
             ]);
         });

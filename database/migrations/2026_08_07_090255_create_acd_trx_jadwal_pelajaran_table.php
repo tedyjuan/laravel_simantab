@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('kode_pegawai', 30);
 
             // Tahun Ajaran
-            $table->string('kode_tahun_ajaran', 20);
+            $table->string('kode_tahun_ajaran_header', 20);
 
             // Jadwal
             $table->enum('hari', [
@@ -59,9 +59,9 @@ return new class extends Migration
                 ->on('hr_ms_pegawai')
                 ->restrictOnDelete();
 
-            $table->foreign('kode_tahun_ajaran')
-                ->references('kode_tahun_ajaran')
-                ->on('acd_ms_tahun_ajaran')
+            $table->foreign('kode_tahun_ajaran_header')
+                ->references('kode_tahun_ajaran_header')
+                ->on('acd_ms_tahun_ajaran_header')
                 ->restrictOnDelete();
 
             $table->foreign('kode_ruangan')
@@ -80,7 +80,7 @@ return new class extends Migration
                 'hari'
             ]);
 
-            $table->index('kode_tahun_ajaran');
+            $table->index('kode_tahun_ajaran_header');
         });
     }
 

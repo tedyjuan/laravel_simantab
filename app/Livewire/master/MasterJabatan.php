@@ -46,7 +46,7 @@ class MasterJabatan extends Component
      * WAJIB ke server karena harus ambil data dari database.
      * Modal ditampilkan lewat event 'open-modal' yang ditangkap Alpine.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $data = Jabatan::findOrFail($id);
 

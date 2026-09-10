@@ -1,4 +1,4 @@
-<div id="halaman_master_mapel" x-data="{ modalOpen: false, deleteModalOpen: false }" x-on:open-modal.window="modalOpen = true"
+<div id="halaman_master_mapel" x-data="{ modalOpen: false, deleteModalOpen: false, modalTitle: '', modalTitleDetail: '' }" x-on:open-modal.window="modalOpen = true"
     x-on:close-modal.window="modalOpen = false" x-on:close-delete-modal.window="deleteModalOpen = false">
 
     {{-- =========================================================
@@ -45,7 +45,8 @@
         <button type="button"
             @click="
                 modalOpen = true;
-                $wire.set('kode_mapel', null, false);
+                modalTitle = 'Tambah Mata Pelajaran';
+                modalTitleDetail = 'Lengkapi data Mata Pelajaran baru';
                 $wire.set('nama_mapel', '', false);
                 $wire.set('kkm', '', false);
                 $wire.set('kode_kurikulum', null, false);
@@ -129,6 +130,10 @@
                                 <div class="flex items-center justify-end gap-1.5">
                                     {{-- Edit: WAJIB ke server, data harus diambil dari DB --}}
                                     <button type="button" wire:click="edit({{ $mapel->id }})" title="Edit"
+                                        @click="
+                                            modalTitle = 'Edit Mata Pelajaran';
+                                            modalTitleDetail = 'Perbarui data Mata Pelajaran';
+                                        "
                                         class="flex size-8 items-center justify-center rounded-lg text-[#9A97B8] hover:bg-[#EAF1FE] hover:text-[#2E6FE0]">
                                         <span class="icon-[tabler--edit] size-4"></span>
                                     </button>
@@ -179,12 +184,8 @@
             {{-- HEADER --}}
             <div class="mb-5 flex items-start justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-[#21203D]">
-                        {{ $mapel_id ? 'Edit Mapel' : 'Tambah Mapel' }}
-                    </h3>
-                    <p class="text-xs text-[#9A97B8]">
-                        {{ $mapel_id ? 'Perbarui data Mapel' : 'Lengkapi data Mapel baru' }}
-                    </p>
+                    <h3 class="text-lg font-bold text-[#21203D]" id="modalTitle" x-text="modalTitle"></h3>
+                    <p class="text-xs text-[#9A97B8]" id="modalTitleDetail" x-text="modalTitleDetail"></p>
                 </div>
                 {{-- Tombol X: murni client-side --}}
                 <button type="button" @click="modalOpen = false"
@@ -195,15 +196,8 @@
             {{-- FORM --}}
             <form wire:submit="store" class="space-y-4">
                 {{-- KODE MAPEL + NAMA MAPEL --}}
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="mb-1 block text-xs font-medium text-[#544F7A]">Kode Mapel</label>
-                        <input type="text" wire:model="kode_mapel"
-                            class="input w-full border-[#ECE9F7] bg-[#FAFAFD] text-sm" placeholder="cth. MTK-01" />
-                        @error('kode_mapel')
-                            <span class="mt-1 block text-xs text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+
                     <div>
                         <label class="mb-1 block text-xs font-medium text-[#544F7A]">Nama Mapel</label>
                         <input type="text" wire:model="nama_mapel"

@@ -13,7 +13,7 @@ class TahunAjarFactory extends Factory
     {
         return [
             'ulid'              => (string) Str::ulid(),
-            'kode_tahun_ajaran' => null,
+            'kode_tahun_ajaran_header' => null,
             'nama'              => 'Tahun Ajaran',
             'tanggal_mulai'     => fake()->date(),
             'tanggal_selesai'   => fake()->date(),

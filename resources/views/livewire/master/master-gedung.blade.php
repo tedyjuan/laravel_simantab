@@ -1,4 +1,4 @@
-<div id="halaman_master_tahun_ajar" x-data="{ modalOpen: false, deleteModalOpen: false }" x-on:open-modal.window="modalOpen = true"
+<div id="halaman_master_tahun_ajar" x-data="{ modalOpen: false, deleteModalOpen: false, modalTitle: '', modalTitleDetail: '' }" x-on:open-modal.window="modalOpen = true"
     x-on:close-modal.window="modalOpen = false" x-on:close-delete-modal.window="deleteModalOpen = false">
     {{-- =========================================================
     HEADER
@@ -36,6 +36,8 @@
         <button type="button"
             @click="
                 modalOpen = true;
+                modalTitle = 'Tambah Gedung';
+                modalTitleDetail = 'Lengkapi data Gedung baru';
                 $wire.set('gedung_id', null, false);
                 $wire.set('kode_gedung', '', false);
                 $wire.set('nama_gedung', '', false);
@@ -114,6 +116,10 @@
                                 <div class="flex items-center justify-end gap-1.5">
                                     {{-- Edit: WAJIB ke server, data harus diambil dari DB --}}
                                     <button type="button" wire:click="edit({{ $item->id }})" title="Edit"
+                                        @click="
+                                            modalTitle = 'Edit Gedung';
+                                            modalTitleDetail = 'Perbarui data Gedung';
+                                        "
                                         class="flex size-8 items-center justify-center rounded-lg text-[#9A97B8] hover:bg-[#EAF1FE] hover:text-[#2E6FE0]">
                                         <span class="icon-[tabler--edit] size-4"></span>
                                     </button>
@@ -163,12 +169,8 @@
             {{-- HEADER --}}
             <div class="mb-5 flex items-start justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-[#21203D]">
-                        {{ $gedung_id ? 'Edit Gedung' : 'Tambah Gedung' }}
-                    </h3>
-                    <p class="text-xs text-[#9A97B8]">
-                        {{ $gedung_id ? 'Perbarui data Gedung' : 'Lengkapi data Gedung baru' }}
-                    </p>
+                    <h3 class="text-lg font-bold text-[#21203D]" id="modalTitle" x-text="modalTitle"></h3>
+                    <p class="text-xs text-[#9A97B8]" id="modalTitleDetail" x-text="modalTitleDetail"></p>
                 </div>
                 {{-- Tombol X: murni client-side --}}
                 <button type="button" @click="modalOpen = false"

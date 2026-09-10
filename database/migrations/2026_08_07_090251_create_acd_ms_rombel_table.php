@@ -18,13 +18,12 @@ return new class extends Migration
             // Relasi ke acd_ms_kelas
             $table->string('kode_kelas', 20);
 
-            // Relasi ke acd_ms_tahun_ajaran
-            $table->string('kode_tahun_ajaran', 20);
+            // Relasi ke acd_ms_tahun_ajaran_header (bukan acd_ms_tahun_ajaran lagi)
+            $table->string('kode_tahun_ajaran_header', 20);
 
             // Wali kelas relasi ke hr_ms_pegawai
             $table->string('kode_pegawai', 30)->nullable();
 
-            // Kapasitas rombel
             $table->unsignedSmallInteger('kapasitas')->default(30);
 
             // Ruangan, relasi ke inv_ms_ruangan
@@ -44,9 +43,9 @@ return new class extends Migration
                 ->on('acd_ms_kelas')
                 ->restrictOnDelete();
 
-            $table->foreign('kode_tahun_ajaran')
-                ->references('kode_tahun_ajaran')
-                ->on('acd_ms_tahun_ajaran')
+            $table->foreign('kode_tahun_ajaran_header')
+                ->references('kode_tahun_ajaran_header')
+                ->on('acd_ms_tahun_ajaran_header')
                 ->restrictOnDelete();
 
             $table->foreign('kode_pegawai')
@@ -59,11 +58,16 @@ return new class extends Migration
                 ->on('inv_ms_ruangan')
                 ->nullOnDelete();
 
-            $table->index([
-                'kode_kelas',
-                'kode_tahun_ajaran',
-                'status'
-            ]);
+            // Index custom (nama pendek, hindari error 64 karakter kayak sebelumnya)
+            $table->index(
+                ['kode_kelas', 'kode_tahun_ajaran_header', 'status'],
+                'idx_rombel_kelas_tahun_status'
+            );
+
+            $table->unique(
+                ['nama_rombel', 'kode_kelas', 'kode_tahun_ajaran_header'],
+                'uniq_rombel_kelas_tahun'
+            );
         });
     }
 

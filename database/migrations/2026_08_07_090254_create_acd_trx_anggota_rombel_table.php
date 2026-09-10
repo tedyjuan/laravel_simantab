@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('kode_rombel', 20);
 
             // Tahun Ajaran
-            $table->string('kode_tahun_ajaran', 20);
+            $table->string('kode_tahun_ajaran_header', 20);
 
             $table->enum('status', [
                 'aktif',
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->unique([
                 'nis',
                 'kode_rombel',
-                'kode_tahun_ajaran'
+                'kode_tahun_ajaran_header'
             ], 'uniq_anggota_rombel');
 
             // Foreign Keys
@@ -48,13 +48,15 @@ return new class extends Migration
                 ->on('acd_ms_rombel')
                 ->restrictOnDelete();
 
-            $table->foreign('kode_tahun_ajaran')
-                ->references('kode_tahun_ajaran')
-                ->on('acd_ms_tahun_ajaran')
+            $table->foreign('kode_tahun_ajaran_header')
+                ->references('kode_tahun_ajaran_header')
+                ->on('acd_ms_tahun_ajaran_header')
                 ->restrictOnDelete();
-
-            $table->index(['kode_rombel', 'kode_tahun_ajaran']);
-            $table->index(['nis', 'kode_tahun_ajaran']);
+            $table->index(
+                ['kode_rombel', 'kode_tahun_ajaran_header'],
+                'idx_anggota_rombel_rombel_tahun'
+            );
+            $table->index(['nis', 'kode_tahun_ajaran_header']);
         });
     }
 
