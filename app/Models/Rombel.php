@@ -17,7 +17,7 @@ class Rombel extends Model
         'kode_rombel',
         'nama_rombel',
         'kode_kelas',
-        'kode_tahun_ajaran',
+        'kode_tahun_ajaran_header', // <- diganti
         'kode_pegawai',
         'kapasitas',
         'kode_ruangan',
@@ -31,7 +31,8 @@ class Rombel extends Model
 
     public function tahunAjar()
     {
-        return $this->belongsTo(TahunAjar::class, 'kode_tahun_ajaran', 'kode_tahun_ajaran');
+        // FK & kolom tujuan sama-sama kode_tahun_ajaran_header
+        return $this->belongsTo(TahunAjar::class, 'kode_tahun_ajaran_header', 'kode_tahun_ajaran_header');
     }
 
     public function pegawai()

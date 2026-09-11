@@ -20,7 +20,7 @@ class PegawaiFactory extends Factory
             'ulid'          => (string) Str::ulid(),
             'kode_pegawai'  => 'PGW-' . fake()->unique()->numerify('#####'),
             'nip'           => fake()->unique()->numerify('#################'),
-            'nama'          => $faker->name(),
+            'nama_pegawai'  => $faker->name(),
             'jenis_kelamin' => $faker->randomElement(['L', 'P',]),
             'email'         => $faker->unique()->safeEmail(),
             'no_hp'         => $faker->phoneNumber(),

@@ -12,6 +12,7 @@ use App\Livewire\master\MasterJenjang;
 use App\Livewire\master\MasterJabatan;
 use App\Livewire\master\MasterGedung;
 use App\Livewire\master\MasterRuangan;
+use App\Livewire\master\MasterRombel;
 
 Route::middleware('guest')->group(function () {
     // Halaman login
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/master-jabatan', MasterJabatan::class)->name('jabatan.index');
     Route::livewire('/master-gedung', MasterGedung::class)->name('gedung.index');
     Route::livewire('/master-ruangan', MasterRuangan::class)->name('ruangan.index');
+    Route::livewire('/master-rombel', MasterRombel::class)->name('rombel.index');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

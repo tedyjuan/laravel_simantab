@@ -1,5 +1,5 @@
 <aside id="sidebar"
-    class=" fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full transform border-r border-gray-300 bg-base-100 transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0">
+    class="fixed left-0 top-0 z-50 h-screen w-64 -translate-x-full transform border-r border-gray-300 bg-base-100 transition-all duration-300 lg:sticky lg:top-0 lg:translate-x-0">
     {{-- Logo --}}
     <div class="logo-container h-16 flex items-center gap-3 px-6 border-b border-gray-200 transition-all duration-300">
         <div
@@ -9,7 +9,7 @@
         <span class="sidebar-text font-bold text-gray-900 tracking-wide text-lg">Simantab</span>
     </div>
     {{-- Nav --}}
-    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto" style="max-height: calc(100vh - 4rem);">
         <p class="sidebar-text px-3 pt-2 pb-1 text-xs uppercase tracking-wider text-gray-400 font-semibold">Menu
             Utama</p>
         <a href="{{ route('dashboard') }}"
@@ -33,12 +33,15 @@
                 'jabatan.*',
                 'gedung.*',
                 'ruangan.*',
+                'rombel.*',
             );
         @endphp
 
         <div>
-            <button
+            <button type="button"
                 onclick="
+            event.preventDefault();
+            event.stopPropagation();
             document.getElementById('submenu-master').classList.toggle('hidden');
             this.querySelector('.chevron').classList.toggle('rotate-180')
         "
@@ -177,13 +180,20 @@
                     </span>
                     Master Ruangan
                 </a>
-
+                <a href="{{ route('rombel.index') }}"
+                    class="group flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors{{ request()->routeIs('rombel.*')
+                        ? 'text-indigo-600 bg-indigo-50'
+                        : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }}">
+                    <span
+                        class="icon-[cil--room] w-5 h-5 shrink-0
+                        {{ request()->routeIs('rombel.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600' }}
+                        transition-colors">
+                    </span>
+                    Master Rombel
+                </a>
 
             </div>
         </div>
-
-
-
 
     </nav>
 </aside>

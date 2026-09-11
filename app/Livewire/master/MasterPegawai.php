@@ -19,7 +19,7 @@ class MasterPegawai extends Component
     public ?string $pegawai_id = null;
     public ?string $kode_pegawai = null;
     public ?string $nip = null;
-    public ?string $nama = null;
+    public ?string $nama_pegawai = null;
     public ?string $jenis_kelamin = null;
     public ?string $email = null;
     public ?string $no_hp = null;
@@ -40,7 +40,7 @@ class MasterPegawai extends Component
     public function render()
     {
         $pegawais = Pegawai::where(function ($query) {
-            $query->where('nama', 'like', '%' . $this->search . '%')
+            $query->where('nama_pegawai', 'like', '%' . $this->search . '%')
                 ->orWhere('kode_jabatan', 'like', '%' . $this->search . '%')
                 ->orWhere('nip', 'like', '%' . $this->search . '%');
         })
@@ -49,7 +49,6 @@ class MasterPegawai extends Component
         $jabatans = Jabatan::where('status', 'aktif')
             ->orderBy('nama_jabatan')
             ->get();
-
         return view(
             'livewire.master.master-pegawai',
             [
@@ -70,7 +69,7 @@ class MasterPegawai extends Component
 
         $this->pegawai_id    = $id;
         $this->nip           = $pegawai->nip;
-        $this->nama          = $pegawai->nama;
+        $this->nama_pegawai  = $pegawai->nama_pegawai;
         $this->jenis_kelamin = $pegawai->jenis_kelamin;
         $this->email         = $pegawai->email;
         $this->no_hp         = $pegawai->no_hp;
@@ -93,7 +92,7 @@ class MasterPegawai extends Component
     public function store()
     {
         $this->validate([
-            'nama'          => 'required|string|max:100',
+            'nama_pegawai'  => 'required|string|max:100',
             'nip'           => 'nullable|string|max:30|unique:hr_ms_pegawai,nip,' . $this->pegawai_id,
             'email'         => 'nullable|email|max:100|unique:hr_ms_pegawai,email,' . $this->pegawai_id,
             'jenis_kelamin' => 'required|in:L,P',
@@ -111,7 +110,7 @@ class MasterPegawai extends Component
 
             $pegawai->update([
                 'nip'           => $this->nip,
-                'nama'          => $this->nama,
+                'nama_pegawai'          => $this->nama_pegawai,
                 'jenis_kelamin' => $this->jenis_kelamin,
                 'email'         => $this->email,
                 'no_hp'         => $this->no_hp,
@@ -132,7 +131,7 @@ class MasterPegawai extends Component
             $pegawai = Pegawai::create([
                 'ulid'          => (string) Str::ulid(),
                 'nip'           => $this->nip,
-                'nama'          => $this->nama,
+                'nama_pegawai'          => $this->nama_pegawai,
                 'jenis_kelamin' => $this->jenis_kelamin,
                 'email'         => $this->email,
                 'no_hp'         => $this->no_hp,
@@ -176,17 +175,17 @@ class MasterPegawai extends Component
     {
         $this->pegawai_id = null;
 
-        $this->nip = '';
-        $this->kode_pegawai = '';
-        $this->nama = '';
+        $this->nip           = '';
+        $this->kode_pegawai  = '';
+        $this->nama_pegawai  = '';
         $this->jenis_kelamin = '';
-        $this->email = '';
-        $this->no_hp = '';
-        $this->alamat = '';
+        $this->email         = '';
+        $this->no_hp         = '';
+        $this->alamat        = '';
         $this->tanggal_lahir = '';
-        $this->kode_jabatan = '';
+        $this->kode_jabatan  = '';
         $this->tanggal_masuk = '';
-        $this->status = 'aktif';
+        $this->status        = 'aktif';
         $this->resetValidation();
     }
 }

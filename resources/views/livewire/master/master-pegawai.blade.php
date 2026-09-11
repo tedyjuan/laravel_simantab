@@ -46,7 +46,7 @@
                     $wire.set('pegawai_id', null, false);
                     $wire.set('kode_pegawai', null, false);
                     $wire.set('nip', '', false);
-                    $wire.set('nama', '', false);
+                    $wire.set('nama_pegawai', '', false);
                     $wire.set('jenis_kelamin', '', false);
                     $wire.set('email', '', false);
                     $wire.set('no_hp', '', false);
@@ -91,13 +91,13 @@
                                         <div
                                             class="w-9 rounded-full bg-[#F1EFFC] text-[#6D5BD0] ring-2 ring-[#F1EFFC] ring-offset-2">
                                             <span class="text-xs font-semibold">
-                                                {{ collect(explode(' ', $pegawai->nama))->take(2)->map(fn($word) => strtoupper(substr($word, 0, 1)))->implode('') }}
+                                                {{ collect(explode(' ', $pegawai->nama_pegawai))->take(2)->map(fn($word) => strtoupper(substr($word, 0, 1)))->implode('') }}
                                             </span>
                                         </div>
                                     </div>
                                     <div>
                                         <p class="text-sm font-semibold text-[#21203D]">
-                                            {{ $pegawai->nama }}
+                                            {{ $pegawai->nama_pegawai }}
                                         </p>
                                         <p class="text-xs text-[#9A97B8]">
                                             {{ $pegawai->kode_jabatan ?? '-' }}

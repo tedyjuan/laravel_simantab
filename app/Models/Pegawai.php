@@ -16,7 +16,7 @@ class Pegawai extends Model
         'ulid',
         'kode_pegawai',
         'nip',
-        'nama',
+        'nama_pegawai',
         'jenis_kelamin',
         'email',
         'no_hp',

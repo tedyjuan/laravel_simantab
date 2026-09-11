@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nip', 30)->nullable()->unique();
 
             // Identitas
-            $table->string('nama', 100);
+            $table->string('nama_pegawai', 100);
             $table->enum('jenis_kelamin', ['L', 'P']);
 
             $table->string('email', 100)->nullable()->unique();
